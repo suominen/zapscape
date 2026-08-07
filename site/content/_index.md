@@ -66,8 +66,12 @@ as stale and the fault retried instead of populated.
 > Two ways in exist: a hostile **guest** escaping to host root, and — where
 > `/dev/kvm` is world-readable/writable (the default on EL8 and later) — an
 > unprivileged **local** user reaching the same code directly. Restricting
-> `/dev/kvm` closes the second without touching the first. **Only a patched
-> kernel removes the flaw** — disabling nested virt or restricting
+> `/dev/kvm` closes the second without touching the first. The nested-virt
+> path also depends on the host CPU: **AMD** hosts (SVM/NPT) are reachable
+> unconditionally, while **Intel** hosts (VMX/EPT) are reachable only where
+> the CPU exposes 5-level EPT to guests — **Ice Lake-SP and newer** — so
+> older Intel hosts are not reachable through the disclosed path. **Only a
+> patched kernel removes the flaw** — disabling nested virt or restricting
 > `/dev/kvm` narrows who can reach an unpatched kernel but does not fix it.
 
 ## Vulnerable commit range
@@ -262,6 +266,15 @@ On AMD hosts check the AMD module instead:
 cat /sys/module/kvm_amd/parameters/nested
 ```
 
+**On an Intel host, is the CPU new enough to be reachable?**  The disclosed
+path needs the host to expose 5-level EPT to guests (Ice Lake-SP and newer).
+Empty output means the CPU predates that and the disclosed path is not
+reachable; **AMD** hosts print no such line and are reachable regardless:
+
+```bash
+grep -ow ept_5level /proc/cpuinfo
+```
+
 **Who can open `/dev/kvm`?**  World access (e.g. `crw-rw-rw-`, the EL8+
 default) exposes the local unprivileged vector; `crw-rw----` root:kvm
 limits it to the `kvm` group:
@@ -344,8 +357,12 @@ until patched.
   can reach the bug directly, without needing a guest — self-hosted CI and
   shared multi-user hosts are directly in scope, and Rocky/RHEL have no
   vendor fix yet.
-- **Intel and AMD both:** unlike many KVM escapes this is demonstrated on
-  both vendors; there is no "AMD is safe" caveat.
+- **AMD unconditional; Intel only Ice Lake-SP and newer:** demonstrated on
+  both vendors, so there is no blanket "AMD is safe" caveat — AMD hosts are
+  reachable whenever nested virt is on. On Intel the disclosed path needs
+  5-level EPT exposed to guests, so pre–Ice Lake-SP hosts are not reachable
+  through it; treat that as a scoping aid, not a substitute for patching a
+  host that runs untrusted guests.
 - **Backports are narrow (CVE-2026-64561):** the fix has landed in 7.1.6,
   6.18.42, 6.12.101, and 6.6.148, but the 6.1.y, 5.15.y, and 5.10.y LTS
   lines — and the many distro kernels riding them (Debian bookworm/bullseye,

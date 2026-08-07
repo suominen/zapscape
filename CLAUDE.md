@@ -563,9 +563,18 @@ on `/dev/kvm` permissions:
 
 The shadow-MMU path itself is reached, on EPT/NPT hardware, chiefly via
 nested virtualization; a host with `kvm_intel.nested=0` / `kvm_amd.nested=0`
-removes the guest-driven path.  Both are per-host properties recorded in
-prose — re-derive them only when adding a distro or when a distro reworks
-its defaults.
+removes the guest-driven path.  A third discriminator is the host **CPU**:
+the disclosed path reaches **AMD** (SVM/NPT) unconditionally, but **Intel**
+(VMX/EPT) only where the CPU exposes 5-level EPT to guests — Ice Lake-SP and
+newer, detectable as the `ept_5level` VMX flag in `/proc/cpuinfo`
+(`grep -ow ept_5level /proc/cpuinfo`; the flag is decoded from the host
+`MSR_IA32_VMX_EPT_VPID_CAP` and printed on the `vmx flags` line).  All
+three — `/dev/kvm` posture, nested-virt default, and CPU generation — are
+per-host reachability properties recorded in the tracker **prose** (the
+exploitation blockquote, Detection, Risk notes), never verdict columns:
+they change *who can reach* an unpatched kernel, not whether it is fixed.
+Re-derive them only when adding a distro or when a distro reworks its
+defaults.
 
 ## Local nixpkgs clone for NixOS channel verification
 
