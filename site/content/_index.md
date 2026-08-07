@@ -121,13 +121,13 @@ row is vulnerable).
 | Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable — no 6.1.y backport |
 | Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — no 5.10.y backport |
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — on the fix-less 6.1.y line |
-| Proxmox VE | 9 (default) | 7.0.14-9-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
-| Proxmox VE | 8 (default) | 6.8.12-40-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
+| Proxmox VE | 9 (default) | 7.0.14-11-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
+| Proxmox VE | 8 (default) | 6.8.12-41-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.42 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.42 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.43.1.el10_2 | — | — | :x: Vulnerable — no RHSA yet |
-| Rocky Linux | 9 | 5.14.0-687.34.1.el9_8 | — | — | :x: Vulnerable — no RHSA yet |
-| Rocky Linux | 8 | 4.18.0-553.151.1.el8_10 | — | — | :x: Vulnerable — no RHSA yet |
+| Rocky Linux | 9 | 5.14.0-687.36.1.el9_8 | — | — | :x: Vulnerable — no RHSA yet |
+| Rocky Linux | 8 | 4.18.0-553.153.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.177-224.371 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.95-124.187 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.18 opt-in) | 6.18.39-79.141 | — | — | :x: Vulnerable — no ALAS yet |
@@ -193,19 +193,22 @@ fix is to boot the release's current default kernel.
 The EL family ships `/dev/kvm` **world-accessible** by default (EL8 and
 later), so on those hosts *any* local user — not just a guest — can reach
 the bug; combined with the guest-escape path this is the higher-exposure
-case. **As of 2026-08-07 Red Hat has not shipped an RHSA:** its security
-data marks the standard `kernel` (and `kernel-rt`) **Affected** on RHEL 8,
-9, and 10 with `none_available` remediation (RHEL 6/7 are Not affected,
-predating the v5.9 invariant — though RHEL 8's 4.18 base *is* affected, Red
-Hat having backported the relevant MMU changes). RHEL-family kernels carry
-security backports without moving their upstream base version, so the
-signal is an erratum, not the version string — and with no RHSA, nothing
-flows to AlmaLinux or Rocky. **Rocky 8, 9, and 10 are therefore all
-`:x:`**; their latest kernels (`4.18.0-553.151.1.el8_10`,
-`5.14.0-687.34.1.el9_8`, `6.12.0-211.43.1.el10_2`, all from the 2026-08-06
-kernel errata) do not carry the fix. Expect an RHSA — and the Rocky/Alma
-rebuilds behind it — before long; upstream and CloudLinux are already
-fixed.
+case. **RHEL 8 is fixed:** Red Hat shipped **RHSA-2026:45115** (kernel,
+`4.18.0-553.147.1.el8_10`) and the companion **RHSA-2026:45116**
+(`kernel-rt`), both dated 2026-07-24, and Rocky 8 has rebuilt past that
+build (`4.18.0-553.153.1.el8_10`, published 2026-07-26) — **Rocky 8 is
+`:white_check_mark:`**. **RHEL 9 and 10 remain unfixed:** Red Hat's
+security data still marks the standard `kernel` (and `kernel-rt`)
+**Affected** on the general RHEL 9 and RHEL 10 streams with no RHSA (RHEL
+6/7 are Not affected, predating the v5.9 invariant). Red Hat has fixed two
+narrower EUS/TUS streams Rocky does not rebuild — RHEL 10.0 EUS
+(RHSA-2026:49030, `6.12.0-55.94.1.el10_0`) and RHEL 8.8 TUS/E4S
+(RHSA-2026:47869, `4.18.0-477.156.1.el8_8`) — neither reaches the general
+kernel stream Rocky tracks. **Rocky 9 and 10 stay `:x:`**; their latest
+kernels (`5.14.0-687.36.1.el9_8`, `6.12.0-211.43.1.el10_2`) do not carry
+the fix. Expect RHSAs for the general RHEL 9/10 streams — and the
+Rocky/Alma rebuilds behind them — before long; upstream, RHEL 8, and
+CloudLinux are already fixed.
 
 **CloudLinux** patches its own `.lve` kernel builds directly and is ahead
 of Red Hat: per its advisory, **CloudLinux 9** already ships a fixed
@@ -355,8 +358,8 @@ until patched.
   anyone running untrusted guests with nested virtualization enabled.
 - **EL8+ hosts (`/dev/kvm` world-accessible):** any unprivileged local user
   can reach the bug directly, without needing a guest — self-hosted CI and
-  shared multi-user hosts are directly in scope, and Rocky/RHEL have no
-  vendor fix yet.
+  shared multi-user hosts are directly in scope. RHEL/Rocky 8 now have a
+  vendor fix; RHEL/Rocky 9 and 10 do not yet.
 - **AMD unconditional; Intel only Ice Lake-SP and newer:** demonstrated on
   both vendors, so there is no blanket "AMD is safe" caveat — AMD hosts are
   reachable whenever nested virt is on. On Intel the disclosed path needs
@@ -444,14 +447,22 @@ readers never need it.
   - `linuxPackages_latest` (`linux_7_1`) is `7.1.6` on both channels —
     also fixed.
 - **Rocky / RHEL family** (via the Red Hat security data API + CSAF VEX,
-  OSV, and Rocky/Alma errata):
-  - Red Hat lists the standard `kernel` (and `kernel-rt`) **Affected** on
-    RHEL 8/9/10 with **no RHSA** (`none_available`); RHEL 6/7 Not
-    affected. No RLSA/ALSA exists (Rocky Apollo DB and OSV
-    `Rocky Linux`/`AlmaLinux` ecosystems return nothing for this CVE).
-  - Rocky 8/9/10 latest kernels (`4.18.0-553.151.1.el8_10`,
-    `5.14.0-687.34.1.el9_8`, `6.12.0-211.43.1.el10_2`; 2026-08-06 errata)
-    carry no fix — vulnerable.
+  OSV, and Rocky BaseOS repodata):
+  - Red Hat's hydra `affected_release` lists **RHSA-2026:45115** (RHEL 8
+    `kernel-0:4.18.0-553.147.1.el8_10`) and **RHSA-2026:45116** (RHEL 8
+    NFV `kernel-rt`), both released 2026-07-24 — RHEL 8 fixed. The general
+    RHEL 9 and RHEL 10 streams remain `package_state` **Affected** with no
+    RHSA; the only other `affected_release` entries are narrower EUS/TUS
+    streams Rocky does not rebuild (RHEL 10.0 EUS via RHSA-2026:49030,
+    RHEL 8.8 TUS/E4S via RHSA-2026:47869). RHEL 6/7 Not affected.
+  - Rocky 8 BaseOS repodata reaches `4.18.0-553.147.1.el8_10` exactly
+    (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26), confirming
+    the RHSA build; current is `4.18.0-553.153.1.el8_10` — fixed since
+    2026-07-26.
+  - Rocky 9 latest `5.14.0-687.36.1.el9_8` and Rocky 10 latest
+    `6.12.0-211.43.1.el10_2` carry no fix — vulnerable. No RLSA/ALSA for
+    either (Rocky Apollo DB and OSV `RockyLinux`/`AlmaLinux` ecosystems
+    return nothing for this CVE on 9/10).
   - **CloudLinux** (via its advisory blog): CL 9 ships fixed
     `kernel-5.14.0-687.30.1.el9_8`+ in stable; CL 7h/8 have
     `kernel-4.18.0-553.150.1.lve`+ in the testing repos; CL 8 LTS / 9 LTS
