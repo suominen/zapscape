@@ -1,0 +1,194 @@
+You are running headless from cron to refresh the Zapscape patch
+tracker. The wrapper has already fetched origin and checked out the
+auto-update branch with origin/main merged forward, and has also refreshed
+the local kernel clones under ~/src/linux/{stable,kvm,vulns} and the
+nixpkgs clone at ~/src/nixos/nixpkgs — inspect them via the `origin/...`
+remote-tracking refs without re-fetching.
+
+Zapscape (CVE-2026-64561) is a KVM/x86 guest-to-host escape in the Linux
+kernel: a stale-root check-ordering bug in the shadow-MMU page-fault
+handlers. is_page_fault_stale() ran before make_mmu_pages_available(), so
+when reclaiming shadow pages zaps the vCPU's in-use root (marking it
+invalid), the handler goes on to map into that invalid root; child shadow
+pages inherit role.invalid and land on the list of active MMU pages,
+violating the invariant that invalid pages are never on it: memory
+corruption / a use-after-free the PoC turns into host code execution. A
+hostile guest can escape to host root; where /dev/kvm is world-accessible
+(the EL8+ default) an unprivileged local user can trigger it too. The
+canonical fix is 2abd5287f083 (KVM: x86: Check for invalid/obsolete root
+*after* making MMU pages available), first released in v7.2-rc5. The bug
+became exploitable with f95eec9bed76 in v5.9 (2020), so kernels from 5.9
+through 7.1 are in-window. It is x86-only; arm64 KVM is a different MMU and
+is not affected.
+
+References:
+- Public PoC (V4bel): https://github.com/V4bel/Zapscape
+- Kernel fix: https://github.com/torvalds/linux/commit/2abd5287f08319fa35764566b15c6e22cb1068db
+- CloudLinux advisory: https://blog.cloudlinux.com/zapscape-cve-2026-64561-kvm-guest-escape-and-local-root-mitigation-and-kernel-update-for-cloudlinux/
+- Red Hat CVE: https://access.redhat.com/security/cve/cve-2026-64561
+
+Per-branch fixed versions and per-distro status all live in
+site/content/_index.md (the canonical tracker). Read it first rather than
+relying on anything cached here.
+
+Working-tree hygiene: stream a fetch through a pipe — `curl -fsSL <url> |
+grep …` — when one pass over the data is enough. If you genuinely need a
+scratch file, save it in the worktree under a `.scratch-` prefix (e.g.
+`.scratch-advisories.json`), work on it there, and `rm` it before you
+commit — never `git add` a scratch file. Don't use /tmp: Bash file reads
+are confined to the worktree, so a file there can be written but not read
+back. The wrapper's `git clean -fd` sweeps forgotten scratch on the next
+run, but the only thing you should leave behind is the edited tracker
+(and its commit).
+
+1. Read CLAUDE.md to learn the project conventions (especially the
+   single-axis kernel verdict, that /dev/kvm exposure and nested-virt are
+   prose not columns, the status wording, the sticky First fixed / Fixed
+   since rules, and the date handling), then read site/content/_index.md.
+
+2. Re-verify each entry currently marked vulnerable (:x:), staged
+   (:warning:), or unverified (:grey_question:).
+
+   Note on git.kernel.org: cgit HTML pages (any URL ending in /log/,
+   /tree/, /commit/, etc.) are Anubis-gated and WebFetch hits the no-JS
+   challenge. Use the persistent local kernel clones — already refreshed by
+   the wrapper, inspect via the `origin/...` remote-tracking refs:
+
+     ~/src/linux/stable   — stable/linux.git
+     ~/src/linux/kvm      — KVM maintainer tree (x86+arm64 fixes land here first)
+     ~/src/linux/vulns    — CNA CVE database (record for CVE-2026-64561)
+
+   (Setup is documented in CLAUDE.md; if a clone is missing, fail loudly
+   rather than guessing.) Plain-text kernel.org endpoints
+   (e.g. /finger_banner) are still WebFetch-able.
+
+   a. Upstream stable kernels: GET https://www.kernel.org/finger_banner
+      for the current point release per stable tree. The 7.1.y / 6.18.y /
+      6.12.y / 6.6.y branches carry the backport (7.1.6 / 6.18.42 /
+      6.12.101 / 6.6.148). The 6.1.y, 5.15.y, and 5.10.y LTS lines do NOT
+      yet — check whether they pick it up (6.1.y can take the fix as-is;
+      5.15.y/5.10.y predate is_page_fault_stale() and would need
+      adaptation). The backport is a cherry-pick with a NEW sha, so search
+      by upstream reference/subject, not `git tag --contains`:
+        git -C ~/src/linux/stable log v<series>..origin/linux-<series>.y \
+          --grep=2abd5287f083 --grep='invalid/obsolete root' --format='%h %s'
+      Empty output means the series is still unpatched.
+      The upstream rows are the "Linux kernel" distribution at the top
+      of the combined *Patch status* table: refresh their *Current
+      kernel* cells each run. *First fixed* / *Fixed since* / *Status*
+      are sticky and gain values only when a previously-unpatched
+      branch (6.1.y / 5.15.y / 5.10.y) first picks up the backport
+      (*Fixed since* = the release tag date).
+
+   b. CVE record — CVE-2026-64561 is already assigned. The authoritative
+      per-branch introduced:fixed versions are in the vulns.git dyad
+      (inspect via origin/master; the wrapper only fetches, so HEAD is
+      stale):
+        git -C ~/src/linux/vulns show \
+          origin/master:cve/published/2026/CVE-2026-64561.dyad
+      Watch NVD for a CVSS score (published 2026-08-04 with none yet) and
+      the disclosure sources for a KEV/EPSS update to add to the Summary.
+
+3. Distro rows — the *Current kernel* column is LIVE: refresh it for
+   every row each run and record any movement (a version-only bump is a
+   real change — commit it and bump lastmod). The verdict columns are
+   STICKY: *Status*, *First fixed*, and *Fixed since* change only on
+   actual adoption of the fix.
+
+   A row can only become fixed once the fix is available to adopt — its
+   kernel series is fixed upstream (the "Linux kernel" rows), OR the
+   distro cherry-picks 2abd5287f083 independently. Because the bug dates
+   to v5.9, every tracked kernel that earns a row is in-window. Rows exist
+   per kernel stream, not just per release: Debian suites' default kernel
+   plus bullseye's opt-in linux-6.1; PVE default, opt-in, and old
+   (superseded) proxmox-kernel series; Rocky's standard kernel (EL
+   kernel-rt is a prose-only note); every AL2023 stream (AL2 is EOL —
+   prose-only, no rows, no repodata polls). A PVE "old" row is a
+   superseded series Proxmox no longer updates: refresh its Current kernel
+   from the same Packages.gz pull, but expect no movement and no verdict
+   flip — only re-read its changelog branch if the package version actually
+   moved. When proxmox-default-kernel switches series, relabel per
+   CLAUDE.md (new default; superseded series becomes "old"; old rows sort
+   after live opt-ins, descending). For each row, re-pull the KERNEL
+   version and check for the backport:
+      - Debian: the SECURITY TRACKER is authoritative for status, not a
+        madison version compare — the base suite lags the -security upload,
+        and Debian backports below the upstream first-fixed release. WebFetch
+        the per-CVE page or curl the JSON:
+          curl -fsS 'https://security-tracker.debian.org/tracker/data/json'
+        read each release's status + the version under `repositories`
+        (a <suite>-security entry = shipped as a security update). Use
+        madison only for the base-suite version and the sid/testing lineage:
+          curl -fsS 'https://api.ftp-master.debian.org/madison?package=linux&s=sid,forky,trixie,bookworm,bullseye&text=on'
+        Note bookworm (6.1.y) and bullseye (5.10.y) cannot be fixed until an
+        upstream backport for those lines exists — neither does at seed.
+      - Proxmox: read *Current kernel* ONLY from the pve-no-subscription
+        Packages.gz (needs zcat) — the published `proxmox-kernel-<series>`
+        build. The pve-kernel git changelog LEADS apt, so use it only to
+        confirm a cherry-pick, never as the version; mixing the two is what
+        flips the version forth-and-back between runs. A cherry-pick in git
+        that pve-no-subscription has not yet published is `:warning:
+        Staged`, not Fixed. Both PVE defaults (7.0 on PVE 9, 6.8 on PVE 8)
+        already carry the cherry-pick; the opt-in/old series do not.
+      - NixOS: the channel kernel pin from the local nixpkgs clone.
+      - Rocky / RHEL: the Red Hat security data API is the authoritative
+        leading signal (RHEL is upstream of Rocky/Alma) — WebFetch
+        https://access.redhat.com/security/cve/CVE-2026-64561 or curl
+        https://access.redhat.com/hydra/rest/securitydata/cve/CVE-2026-64561.json
+        and read the kernel fix_state + affected_release. At seed RHEL 8/9/10
+        kernel is "Affected" with NO RHSA, so Rocky 8/9/10 are all :x:. When
+        an RHSA + fixed NVR appears, Rocky rebuilds it; confirm via
+        Rocky BaseOS repodata (zcat) reaching that NVR, cross-check AlmaLinux
+        via OSV https://api.osv.dev/v1/vulns/CVE-2026-64561. (CloudLinux is
+        ahead of RHEL — its fixed .lve builds are prose in the ### Rocky /
+        RHEL family section, not a table row.)
+      - Amazon: the ALAS signal is the repodata updateinfo.xml.gz (maps CVE
+        -> ALAS -> fixed kernel NVR), NOT the JS-rendered per-CVE ALAS page
+        (returns nothing headlessly). Resolve mirror.list, fetch
+        <base>repodata/updateinfo.xml.gz (zcat), grep the CVE; check all
+        kernel streams (kernel/kernel6.12/kernel6.18). At seed no ALAS
+        exists, so all AL2023 streams are :x:. Versions from primary.xml.gz.
+   Exact recipes are in CLAUDE.md. A row flips to ":white_check_mark:
+   Fixed" when its kernel carries the backport (reaches a fixed series
+   release, or a distro advisory ships the cherry-pick). On a flip, set
+   *First fixed* to the first fixed package build and set "Fixed since"
+   per the CLAUDE.md rule. A kernel bump that stays IN-WINDOW WITHOUT
+   the backport is NOT adoption — update *Current kernel* and nothing
+   else.
+
+   zcat / gunzip ARE available to the headless run — use them for the
+   Packages.gz / repodata pulls. Pull only kernel versions and advisory
+   state — the tracker records no other per-distro facts.
+
+   /dev/kvm exposure (world-accessible on EL8+ vs root:kvm on Debian/NixOS)
+   and nested-virt defaults are NOT verdict axes — they are prose about who
+   can reach an unpatched kernel. An affected unpatched row is :x:, not
+   :warning:, regardless. A :warning: is only for a staged-but-unreleased
+   fix or a vendor that ships a materially-reducing default. A mitigation is
+   never :white_check_mark: — the kernel hole remains until the backport
+   ships.
+
+   Do NOT record NixOS channel git-revisions (the
+   channels.nixos.org/<channel>/git-revision pins) anywhere in the tracker.
+   They advance on nearly every run; recording them manufactures a diff on
+   an otherwise no-op run.
+
+4. Edit site/content/_index.md to reflect any changes per the conventions
+   in CLAUDE.md (status badges, kernel versions, the "Fixed since" sticky
+   date, and the `## Verification log` update rules). If you make content
+   changes, bump the `lastmod` date in the front-matter. If nothing
+   changed, leave the file alone — don't bump `lastmod` on a no-op run.
+   Never write "no change" / "unchanged from prior run" / "no verdict
+   changes this run" prose into the tracker — silence is how the tracker
+   says "unchanged". Even on a run that does change something real, touch
+   only the lines whose facts changed.
+
+5. If you made changes, commit them on the current branch (which is
+   `auto-update` — the wrapper has already switched to it and merged
+   origin/main forward). Do NOT create a new branch, do NOT switch
+   branches, do NOT push, and do NOT open a PR. The user merges auto-update
+   into main manually. If nothing changed, exit without committing.
+
+If you hit unexpected errors or substantive changes you can't confidently
+encode, commit your best attempt and note open questions in the commit
+message.
