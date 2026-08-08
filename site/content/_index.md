@@ -25,7 +25,7 @@ cover:
 | Discoverer | Hyunwoo Kim ([`@v4bel`][poc]) |
 | Public disclosure | 2026-08-06 (researcher writeup / PoC; CVE record published 2026-08-04) |
 | Public PoC | [V4bel/Zapscape][poc] (reported to crash the guest rather than escape on CloudLinux-built kernels) |
-| KEV / EPSS / CVSS | CVSS 7.0 Important (Red Hat, CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H); NVD published 2026-08-04 with no score yet; EPSS 0.16 % (5th pct); not in KEV |
+| KEV / EPSS / CVSS | CVSS 7.0 Important (Red Hat, CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H); kernel CNA's own score, carried in NVD's record (`vulnStatus: Received`, not yet NVD-analyzed), is CVSS:3.1 8.8 High (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H); EPSS 0.16 % (5th pct); not in KEV |
 | Related | [Januscape (CVE-2026-53359)][januscape] and [ITScape (CVE-2026-46316)][itscape] — the July 2026 KVM escapes by the same researcher (x86 shadow-MMU role confusion; arm64 vGIC-ITS). All three are `-scape` KVM escapes; Zapscape and Januscape both live in the x86 shadow MMU but are distinct bugs |
 {.summary}
 
@@ -124,7 +124,7 @@ row is vulnerable).
 | Proxmox VE | 9 (default) | 7.0.14-11-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-41-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.42 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | 26.05 | 6.18.42 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.44.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.36.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.153.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
@@ -411,9 +411,13 @@ readers never need it.
 - Red Hat rates it **CVSSv3 7.0 Important**
   (CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H, CWE-825; via the Red Hat
   security data API, marked `draft`). CVE-2026-64561 is assigned by the
-  kernel CNA, not Red Hat. **NVD** published the record 2026-08-04 with no
-  CVSS score yet. EPSS 0.16 % (5th percentile, via api.first.org, 2026-08-06).
-  Not in CISA KEV.
+  kernel CNA, not Red Hat. **NVD** published the record 2026-08-04; it now
+  carries the kernel CNA's own CVSS:3.1 score, 8.8 High
+  (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H) — via
+  `services.nvd.nist.gov/rest/json/cves/2.0`, `sourceIdentifier` matching
+  the kernel CNA and `vulnStatus: Received` (not yet NVD-analyzed), so this
+  is the submitter's score, not an independent NVD rating. EPSS 0.16 %
+  (5th percentile, via api.first.org, 2026-08-06). Not in CISA KEV.
 
 #### Distributions
 
