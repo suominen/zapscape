@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-08
+lastmod: 2026-08-09
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -123,8 +123,13 @@ row is vulnerable).
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — on the fix-less 6.1.y line |
 | Proxmox VE | 9 (default) | 7.0.14-11-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-41-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | Unstable | 6.18.42 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | master | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | release-26.05 | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable | 6.18.42 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
+| NixOS | Unstable (small) | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable (nixpkgs) | 6.18.42 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
+| NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
+| NixOS | 26.05 (small) | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.44.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.36.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.153.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
@@ -187,6 +192,33 @@ cherry-pick went only into the two current defaults, and those older series
 (last built 2026-07-28, 2026-05-15, and 2025-03-16) are no longer updated.
 A host booted into any of them is in-window and permanently vulnerable; the
 fix is to boot the release's current default kernel.
+
+### NixOS
+
+Every tracked ref's default `linuxPackages` is `linux_6_18` and its
+`linuxPackages_latest` is `linux_7_1`, and both tracks sit on fixed
+point releases everywhere, so all of these rows are fixed; they differ
+only in which point release they have reached. Kernel updates land on
+nixpkgs `master` first, and each channel publishes them once its Hydra
+jobset passes. A channel can therefore sit days behind `master`, and an
+unstable channel is not necessarily ahead of a release channel.  The
+`-small` channels (`nixos-unstable-small`, `nixos-26.05-small`) are
+gated on a reduced jobset and pick up kernel updates fastest.
+
+The `master` and `release-26.05` rows are the git branches the fix lands
+on. They are not Hydra-gated, so they carry a kernel bump from the
+moment the commit lands — typically a day or more before a channel
+republishes it, which is what the *Fixed since* dates down the group
+show. They are development branches, not deployment targets.
+
+Flake inputs map onto these directly.
+`github:NixOS/nixpkgs/nixos-unstable` tracks the `nixos-unstable`
+channel — the GitHub channel branches are updated to exactly the
+published channel pins — and a bare `github:NixOS/nixpkgs` with no ref
+follows `master`. A bare `nixpkgs` registry input resolves by default to
+`nixpkgs-unstable`, which is a separate channel aimed at Nix users on
+other operating systems rather than at NixOS, so it is not gated on the
+NixOS tests and can hold a different kernel from `nixos-unstable`.
 
 ### Rocky Linux / RHEL family
 
@@ -446,11 +478,25 @@ readers never need it.
     2026-05-15), PVE 8 old 6.11 (`6.11.11-2`, 2025-03-16) — all superseded,
     no longer updated, and not among the two defaults Proxmox patched for
     this CVE, so none carries the fix — permanently vulnerable.
-- **NixOS** (via the local nixpkgs clone at the channel revision pins):
-  - The default `linuxPackages` (`linux_6_18`) is `6.18.42` on both
-    nixos-unstable and nixos-26.05 — carries the backport — fixed.
-  - `linuxPackages_latest` (`linux_7_1`) is `7.1.6` on both channels —
-    also fixed.
+- **NixOS** (via the local nixpkgs clone at the channel revision pins
+  and at the branch tips):
+  - every tracked ref resolves `linux_default` to `linux_6_18` and
+    `linux_latest` to `linux_7_1`, so the verdict turns only on which
+    point release each has reached.
+  - `master` carries 6.18.43 / 7.1.7; it reached 6.18.42 in
+    `b658e06342e8`.
+  - `release-26.05` carries 6.18.43 / 7.1.7; it reached 6.18.42 in
+    `33565191d37a`.
+  - nixos-unstable carries 6.18.42 / 7.1.6.
+  - nixos-unstable-small carries 6.18.43 / 7.1.7.
+  - nixpkgs-unstable carries 6.18.42 / 7.1.6.
+  - nixos-26.05 carries 6.18.43 / 7.1.7.
+  - nixos-26.05-small carries 6.18.43 / 7.1.7.
+  - every one of those point releases is at or above the fixed release
+    on its track (6.18.42, 7.1.6), so both tracks are fixed everywhere.
+  - each channel's *Fixed since* is the first published release whose
+    revision contains its branch's 6.18.42 commit, resolved from the
+    nix-releases bucket rather than stamped from the branch date.
 - **Rocky / RHEL family** (via the Red Hat security data API + CSAF VEX,
   OSV, and Rocky BaseOS repodata):
   - Red Hat's hydra `affected_release` now lists **RHSA-2026:45115**

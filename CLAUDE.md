@@ -57,7 +57,8 @@ adoption, and edit only the lines whose facts change.
 │   └── go.mod, go.sum                        # Hugo Modules — pulls PaperMod theme
 ├── scripts/                                  # auto-update agent: prompt + driver
 │   ├── auto-update                           # wrapper invoked by the systemd timer
-│   └── auto-update-prompt.txt                # prompt fed to headless Claude
+│   ├── auto-update-prompt.txt                # prompt fed to headless Claude
+│   └── nixos-first-shipped                   # channel + commit -> first-published date
 ├── systemd/                                  # user-level timer + service units
 │   ├── zapscape-tracker-update.service      # runs scripts/auto-update
 │   └── zapscape-tracker-update.timer        # twice daily
@@ -134,7 +135,15 @@ in *Status* as the emoji **plus a one-word verdict** and an optional
 short note after an em dash (`:white_check_mark: Fixed —
 PSA-2026-00027-1`, `:x: Vulnerable — no cherry-pick`); longer caveats go
 in the `###` prose.  Label NixOS channels in the **Release** column in
-friendly form (`Unstable`, `26.05`).  Label opt-in/alternate kernel
+friendly form (`Unstable`, `26.05`).  Where a channel has variants, keep
+the friendly base and add the variant in parentheses — `Unstable
+(small)`, `Unstable (nixpkgs)`, `26.05 (small)`; this is the one place
+the `<release> (<x>)` parenthetical carries something other than a
+kernel series, so introduce the real channel name
+(`nixos-unstable-small`, `nixpkgs-unstable`) in the `###` prose.  The
+nixpkgs `master` and `release-26.05` rows are labelled with the bare
+branch name, since they are branches and not channels.  Label
+opt-in/alternate kernel
 rows by their kernel *series*, uniformly `<release> (<series> opt-in)`
 — `11 (6.1 opt-in)`, `2023 (6.12 opt-in)` — and introduce the
 underlying package name (`linux-6.1`, `kernel6.12`) in the `###`
@@ -592,7 +601,19 @@ the version for every supported mainline.org kernel series.  The **default**
 alias rather than assuming the default is the newest or oldest LTS — it has
 moved before (it was 6.12.x earlier in 26.05's life).
 
-Tracked channels: `nixos-26.05` (default), `nixos-unstable`.
+Tracked refs: the two ungated git branches `master` and `release-26.05`,
+plus the five channels `nixos-unstable`, `nixos-unstable-small`,
+`nixpkgs-unstable`, `nixos-26.05`, `nixos-26.05-small`.  Rows are ordered
+by **propagation**, not by release: the branch a fix lands on first, then
+the branch it is backported to, then the channels that republish them,
+keeping each `-small` variant next to its sibling rather than splitting
+the pair by date.  *Fixed since* then comes out non-decreasing across the
+branch-to-channel boundary, which is a free check that no channel
+predates its branch.  (This mirrors the shared tracker template's
+`DESIGN.md` row-order rule and its `CLAUDE-package-sources.md` NixOS
+recipe; keep this section in step with those.)
+
+The five channels are read from their `git-revision` pins:
 
 ```
 rev=$(curl -fsSL https://channels.nixos.org/<channel>/git-revision)
@@ -601,6 +622,64 @@ git -C ~/src/nixos/nixpkgs show "${rev}:pkgs/os-specific/linux/kernel/kernels-or
 
 `channels.nixos.org/<channel>/git-revision` returns a 302 — always pass
 `-L` to curl.  The wrapper refreshes the clone on every run.
+
+**The branch rows have no `git-revision` pin** — read them from the
+clone's remote-tracking refs instead:
+
+```
+git -C ~/src/nixos/nixpkgs show origin/master:pkgs/os-specific/linux/kernel/kernels-org.json
+```
+
+The branches are rows on purpose: ungated by Hydra, they carry the fix
+from the moment the commit lands, so they show where it sits before any
+channel publishes it — and they are what a flake input pinned to a bare
+`github:NixOS/nixpkgs` or to `release-26.05` actually follows.  A branch
+row's *Current kernel* tracks the `kernels-org.json` version, which moves
+only on a kernel bump, so the row does not churn with ordinary commit
+traffic.
+
+**A branch row's *Fixed since* is the commit date of the fixing commit**
+— nothing publishes an ungated branch, so there is no release date to
+use.  Find it by searching the branch for the bump that first reached the
+fixed release:
+
+```
+git -C ~/src/nixos/nixpkgs log --format='%H %cI %s' -S'6.18.42' origin/master -- pkgs/os-specific/linux/kernel/kernels-org.json
+```
+
+**A channel row's *Fixed since* must be derived, never stamped from the
+branch date.**  It is the date the channel first published a release
+whose revision contains its branch's fixing commit.  Resolve it from the
+`nix-releases` bucket with the installed helper:
+
+```
+~/src/zapscape/scripts/nixos-first-shipped <channel> <commit>
+```
+
+**Invoke it by that absolute primary-checkout path, never as
+`./scripts/…` from the auto-update worktree.**  `scripts/` is one of the
+guarded paths: the agent can commit to the `auto-update` branch, so the
+worktree copy is untrusted code, and the wrapper's guard only compares it
+against `origin/main` once at start-up.  Running the primary checkout's
+copy keeps what executes to what you have reviewed and merged — the same
+reason `ExecStart` points at the primary checkout's wrapper.  The
+worktree copy exists only so the file is under version control; don't run
+it.  Pass the *master* commit for `nixos-unstable`,
+`nixos-unstable-small`, and `nixpkgs-unstable`, and the *release-26.05*
+commit for `nixos-26.05` and `nixos-26.05-small` — a release channel
+ships its own branch's backport, not master's commit.
+
+The three unstable channels are genuinely distinct and can hold different
+kernels: `nixos-unstable` is gated on a full NixOS jobset and can sit
+days behind `master`, `nixos-unstable-small` on a reduced jobset and
+leads, and `nixpkgs-unstable` is a separate channel — aimed at Nix users
+on other operating systems, so not gated on the NixOS tests — that a
+bare `nixpkgs` flake registry input resolves to by default (a user or
+system registry entry can override it).  Don't assert a ranking between
+the unstable channels beyond what the pins show: they routinely hold the
+same version.  The GitHub channel *branches* are updated to exactly the
+channel pins, so no separate check is needed for flake inputs pinned to a
+channel branch.
 
 ## Proxmox kernel version source
 
