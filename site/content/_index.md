@@ -125,7 +125,7 @@ row is vulnerable).
 | Proxmox VE | 8 (default) | 6.8.12-41-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable | 6.18.42 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
+| NixOS | Unstable | 6.18.43 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.42 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
@@ -487,7 +487,7 @@ readers never need it.
     `b658e06342e8`.
   - `release-26.05` carries 6.18.43 / 7.1.7; it reached 6.18.42 in
     `33565191d37a`.
-  - nixos-unstable carries 6.18.42 / 7.1.6.
+  - nixos-unstable carries 6.18.43 / 7.1.7.
   - nixos-unstable-small carries 6.18.43 / 7.1.7.
   - nixpkgs-unstable carries 6.18.42 / 7.1.6.
   - nixos-26.05 carries 6.18.43 / 7.1.7.
