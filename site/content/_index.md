@@ -116,7 +116,7 @@ row is vulnerable).
 | Linux kernel | 5.15.x | 5.15.215 | — | — | :x: Vulnerable — LTS, no backport |
 | Linux kernel | 5.10.x | 5.10.264 | — | — | :x: Vulnerable — LTS, no backport |
 | Debian | sid (unstable) | 7.1.7-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
-| Debian | forky (testing) | 7.1.6-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
+| Debian | forky (testing) | 7.1.7-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.101-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
 | Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable — no 6.1.y backport |
 | Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — no 5.10.y backport |
@@ -456,8 +456,8 @@ readers never need it.
 - **Debian** (via the Debian security tracker + `madison`):
   - unstable/sid — `7.1.7-1`; the tracker records the fix from `7.1.6-1`
     (entered unstable 2026-08-03) — fixed.
-  - testing/forky — `7.1.6-1` per the dak archive (migrated ~2026-08-07;
-    the tracker's suite snapshot lagged at research time) — fixed.
+  - testing/forky — `7.1.7-1` per `madison` (the security tracker's own
+    suite snapshot still lags at `7.1.6-1`) — fixed.
   - stable/trixie — `6.12.101-1` via `trixie-security` (**DSA-6415-1**,
     2026-08-06, lists CVE-2026-64561) — fixed.
   - oldstable/bookworm — `6.1.180-1` (`bookworm-security`) on the 6.1.y
