@@ -112,15 +112,15 @@ row is vulnerable).
 | Linux kernel | 6.18.x | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 6.12.x | 6.12.103 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 6.6.x | 6.6.151 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.1.x | 6.1.182 | — | — | :x: Vulnerable — LTS, no backport yet |
-| Linux kernel | 5.15.x | 5.15.215 | — | — | :x: Vulnerable — LTS, no backport |
-| Linux kernel | 5.10.x | 5.10.264 | — | — | :x: Vulnerable — LTS, no backport |
+| Linux kernel | 6.1.x | 6.1.182 | — | — | :x: Vulnerable |
+| Linux kernel | 5.15.x | 5.15.215 | — | — | :x: Vulnerable |
+| Linux kernel | 5.10.x | 5.10.264 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.7-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.7-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.101-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
-| Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable — no 6.1.y backport |
-| Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — no 5.10.y backport |
-| Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — on the fix-less 6.1.y line |
+| Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable |
+| Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable |
+| Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable |
 | Proxmox VE | 9 (default) | 7.0.14-11-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-41-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
