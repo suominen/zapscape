@@ -127,9 +127,9 @@ row is vulnerable).
 | NixOS | release-26.05 | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.43 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable (nixpkgs) | 6.18.42 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
+| NixOS | Unstable (nixpkgs) | 6.18.43 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | 26.05 (small) | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | 26.05 (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.44.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.36.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.153.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
@@ -483,15 +483,15 @@ readers never need it.
   - every tracked ref resolves `linux_default` to `linux_6_18` and
     `linux_latest` to `linux_7_1`, so the verdict turns only on which
     point release each has reached.
-  - `master` carries 6.18.43 / 7.1.7; it reached 6.18.42 in
+  - `master` carries 6.18.44 / 7.1.8; it reached 6.18.42 in
     `b658e06342e8`.
-  - `release-26.05` carries 6.18.43 / 7.1.7; it reached 6.18.42 in
+  - `release-26.05` carries 6.18.44 / 7.1.8; it reached 6.18.42 in
     `33565191d37a`.
   - nixos-unstable carries 6.18.43 / 7.1.7.
   - nixos-unstable-small carries 6.18.43 / 7.1.7.
-  - nixpkgs-unstable carries 6.18.42 / 7.1.6.
+  - nixpkgs-unstable carries 6.18.43 / 7.1.7.
   - nixos-26.05 carries 6.18.43 / 7.1.7.
-  - nixos-26.05-small carries 6.18.43 / 7.1.7.
+  - nixos-26.05-small carries 6.18.44 / 7.1.8.
   - every one of those point releases is at or above the fixed release
     on its track (6.18.42, 7.1.6), so both tracks are fixed everywhere.
   - each channel's *Fixed since* is the first published release whose
