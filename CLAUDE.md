@@ -217,7 +217,11 @@ in the `### Rocky Linux / RHEL family` prose.
 A per-distro `###` section is for **reader-facing** caveats that don't fit
 the table (`/dev/kvm` exposure, nested-virt posture, EL-family scope).
 Keep tracking methodology out of it — that is agent guidance and belongs in
-this file.
+this file.  In particular, when prose covers a row-less item (a dead
+series, an untracked release), end with the consequence and the way out
+for a host still on it ("no fix is coming — switch to the current default
+kernel"), never with the row decision ("so it gets no row here") — the
+reader can see the table for themselves.
 
 ## Routine run scope — live Current kernel, sticky verdict columns
 
