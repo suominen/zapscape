@@ -128,10 +128,10 @@ row is vulnerable).
 | NixOS | Unstable | 6.18.44 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.44 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
-| NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
+| NixOS | 26.05 | 6.18.44 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| Rocky Linux | 10 | 6.12.0-211.44.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
-| Rocky Linux | 9 | 5.14.0-687.36.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
+| Rocky Linux | 10 | 6.12.0-211.46.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
+| Rocky Linux | 9 | 5.14.0-687.38.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.154.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.177-224.371 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.95-124.187 | — | — | :x: Vulnerable — no ALAS yet |
@@ -490,7 +490,7 @@ readers never need it.
   - nixos-unstable carries 6.18.44 / 7.1.8.
   - nixos-unstable-small carries 6.18.44 / 7.1.8.
   - nixpkgs-unstable carries 6.18.44 / 7.1.8.
-  - nixos-26.05 carries 6.18.43 / 7.1.7.
+  - nixos-26.05 carries 6.18.44 / 7.1.8.
   - nixos-26.05-small carries 6.18.44 / 7.1.8.
   - every one of those point releases is at or above the fixed release
     on its track (6.18.42, 7.1.6), so both tracks are fixed everywhere.
@@ -518,11 +518,11 @@ readers never need it.
     2026-07-26.
   - Rocky 9 BaseOS repodata reaches `5.14.0-687.30.1.el9_8` exactly
     (primary.xml.gz build/file epochs both 2026-07-27), confirming the
-    RHSA build; current is `5.14.0-687.36.1.el9_8` — fixed since
+    RHSA build; current is `5.14.0-687.38.1.el9_8` — fixed since
     2026-07-27.
   - Rocky 10 BaseOS repodata reaches `6.12.0-211.39.1.el10_2` exactly
     (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26), confirming
-    the RHSA build; current is `6.12.0-211.44.1.el10_2` — fixed since
+    the RHSA build; current is `6.12.0-211.46.1.el10_2` — fixed since
     2026-07-26.
   - **CloudLinux** (via its advisory blog): CL 9 ships fixed
     `kernel-5.14.0-687.30.1.el9_8`+ in stable; CL 7h/8 have
