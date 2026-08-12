@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-11
+lastmod: 2026-08-12
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -115,7 +115,7 @@ row is vulnerable).
 | Linux kernel | 6.1.x | 6.1.182 | — | — | :x: Vulnerable |
 | Linux kernel | 5.15.x | 5.15.215 | — | — | :x: Vulnerable |
 | Linux kernel | 5.10.x | 5.10.264 | — | — | :x: Vulnerable |
-| Debian | sid (unstable) | 7.1.7-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
+| Debian | sid (unstable) | 7.1.8-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.7-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.101-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
 | Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable |
@@ -125,7 +125,7 @@ row is vulnerable).
 | Proxmox VE | 8 (default) | 6.8.12-41-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable | 6.18.43 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
+| NixOS | Unstable | 6.18.44 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.44 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
@@ -454,7 +454,7 @@ readers never need it.
 #### Distributions
 
 - **Debian** (via the Debian security tracker + `madison`):
-  - unstable/sid — `7.1.7-1`; the tracker records the fix from `7.1.6-1`
+  - unstable/sid — `7.1.8-1`; the tracker records the fix from `7.1.6-1`
     (entered unstable 2026-08-03) — fixed.
   - testing/forky — `7.1.7-1` per `madison` (the security tracker's own
     suite snapshot still lags at `7.1.6-1`) — fixed.
@@ -487,7 +487,7 @@ readers never need it.
     `b658e06342e8`.
   - `release-26.05` carries 6.18.44 / 7.1.8; it reached 6.18.42 in
     `33565191d37a`.
-  - nixos-unstable carries 6.18.43 / 7.1.7.
+  - nixos-unstable carries 6.18.44 / 7.1.8.
   - nixos-unstable-small carries 6.18.44 / 7.1.8.
   - nixpkgs-unstable carries 6.18.44 / 7.1.8.
   - nixos-26.05 carries 6.18.43 / 7.1.7.
