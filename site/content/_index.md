@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-10
+lastmod: 2026-08-11
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -126,13 +126,13 @@ row is vulnerable).
 | NixOS | master | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.43 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
-| NixOS | Unstable (small) | 6.18.43 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable (nixpkgs) | 6.18.43 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
+| NixOS | Unstable (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable (nixpkgs) | 6.18.44 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.43 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.44.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.36.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
-| Rocky Linux | 8 | 4.18.0-553.153.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
+| Rocky Linux | 8 | 4.18.0-553.154.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.177-224.371 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.95-124.187 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.18 opt-in) | 6.18.39-79.141 | — | — | :x: Vulnerable — no ALAS yet |
@@ -488,8 +488,8 @@ readers never need it.
   - `release-26.05` carries 6.18.44 / 7.1.8; it reached 6.18.42 in
     `33565191d37a`.
   - nixos-unstable carries 6.18.43 / 7.1.7.
-  - nixos-unstable-small carries 6.18.43 / 7.1.7.
-  - nixpkgs-unstable carries 6.18.43 / 7.1.7.
+  - nixos-unstable-small carries 6.18.44 / 7.1.8.
+  - nixpkgs-unstable carries 6.18.44 / 7.1.8.
   - nixos-26.05 carries 6.18.43 / 7.1.7.
   - nixos-26.05-small carries 6.18.44 / 7.1.8.
   - every one of those point releases is at or above the fixed release
@@ -514,7 +514,7 @@ readers never need it.
     `5.14.0-570.131.1.el9_6`). RHEL 6/7 Not affected.
   - Rocky 8 BaseOS repodata reaches `4.18.0-553.147.1.el8_10` exactly
     (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26), confirming
-    the RHSA build; current is `4.18.0-553.153.1.el8_10` — fixed since
+    the RHSA build; current is `4.18.0-553.154.1.el8_10` — fixed since
     2026-07-26.
   - Rocky 9 BaseOS repodata reaches `5.14.0-687.30.1.el9_8` exactly
     (primary.xml.gz build/file epochs both 2026-07-27), confirming the
