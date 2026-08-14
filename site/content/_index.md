@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-13
+lastmod: 2026-08-14
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -25,7 +25,7 @@ cover:
 | Discoverer | Hyunwoo Kim ([`@v4bel`][poc]) |
 | Public disclosure | 2026-08-06 (researcher writeup / PoC; CVE record published 2026-08-04) |
 | Public PoC | [V4bel/Zapscape][poc] (reported to crash the guest rather than escape on CloudLinux-built kernels) |
-| KEV / EPSS / CVSS | CVSS 7.0 Important (Red Hat, CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H); kernel CNA's own score, carried in NVD's record (`vulnStatus: Received`, not yet NVD-analyzed), is CVSS:3.1 8.8 High (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H); EPSS 0.16 % (5th pct); not in KEV |
+| KEV / EPSS / CVSS | CVSS 7.0 Moderate (Red Hat, CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H); kernel CNA's own score, carried in NVD's record (`vulnStatus: Received`, not yet NVD-analyzed), is CVSS:3.1 8.8 High (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H); EPSS 0.12 % (2nd pct); not in KEV |
 | Related | [Januscape (CVE-2026-53359)][januscape] and [ITScape (CVE-2026-46316)][itscape] — the July 2026 KVM escapes by the same researcher (x86 shadow-MMU role confusion; arm64 vGIC-ITS). All three are `-scape` KVM escapes; Zapscape and Januscape both live in the x86 shadow MMU but are distinct bugs |
 {.summary}
 
@@ -440,16 +440,16 @@ readers never need it.
 
 #### Scoring
 
-- Red Hat rates it **CVSSv3 7.0 Important**
+- Red Hat rates it **CVSSv3 7.0 Moderate**
   (CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H, CWE-825; via the Red Hat
-  security data API, marked `draft`). CVE-2026-64561 is assigned by the
+  security data API, marked `verified`). CVE-2026-64561 is assigned by the
   kernel CNA, not Red Hat. **NVD** published the record 2026-08-04; it now
   carries the kernel CNA's own CVSS:3.1 score, 8.8 High
   (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H) — via
   `services.nvd.nist.gov/rest/json/cves/2.0`, `sourceIdentifier` matching
   the kernel CNA and `vulnStatus: Received` (not yet NVD-analyzed), so this
-  is the submitter's score, not an independent NVD rating. EPSS 0.16 %
-  (5th percentile, via api.first.org, 2026-08-06). Not in CISA KEV.
+  is the submitter's score, not an independent NVD rating. EPSS 0.12 %
+  (2nd percentile, via api.first.org). Not in CISA KEV.
 
 #### Distributions
 
