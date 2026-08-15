@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-14
+lastmod: 2026-08-15
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -131,7 +131,7 @@ row is vulnerable).
 | NixOS | 26.05 | 6.18.44 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.47.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
-| Rocky Linux | 9 | 5.14.0-687.38.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
+| Rocky Linux | 9 | 5.14.0-687.39.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.155.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.177-224.371 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.95-124.187 | — | — | :x: Vulnerable — no ALAS yet |
@@ -518,7 +518,7 @@ readers never need it.
     2026-07-26.
   - Rocky 9 BaseOS repodata reaches `5.14.0-687.30.1.el9_8` exactly
     (primary.xml.gz build/file epochs both 2026-07-27), confirming the
-    RHSA build; current is `5.14.0-687.38.1.el9_8` — fixed since
+    RHSA build; current is `5.14.0-687.39.1.el9_8` — fixed since
     2026-07-27.
   - Rocky 10 BaseOS repodata reaches `6.12.0-211.39.1.el10_2` exactly
     (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26), confirming
