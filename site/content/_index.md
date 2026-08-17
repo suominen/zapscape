@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-16
+lastmod: 2026-08-17
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -107,7 +107,7 @@ row is vulnerable).
 
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
-| Linux kernel | mainline | 7.2-rc7 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
+| Linux kernel | mainline | 7.2 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
 | Linux kernel | 7.1.x | 7.1.8 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
 | Linux kernel | 6.18.x | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 6.12.x | 6.12.103 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
@@ -195,10 +195,12 @@ fix is to boot the release's current default kernel.
 
 ### NixOS
 
-Every tracked ref's default `linuxPackages` is `linux_6_18` and its
-`linuxPackages_latest` is `linux_7_1`, and both tracks sit on fixed
-point releases everywhere, so all of these rows are fixed; they differ
-only in which point release they have reached. Kernel updates land on
+Every tracked ref's default `linuxPackages` is `linux_6_18`, and its
+`linuxPackages_latest` is fixed everywhere too — `linux_7_2` on `master`,
+`release-26.05`, and `nixos-26.05-small`, still `linux_7_1` on the other
+four refs (the alias bump hasn't reached them yet). Both tracks sit on
+fixed point releases everywhere, so all of these rows are fixed; they
+differ only in which point release they have reached. Kernel updates land on
 nixpkgs `master` first, and each channel publishes them once its Hydra
 jobset passes. A channel can therefore sit days behind `master`, and an
 unstable channel is not necessarily ahead of a release channel.  The
@@ -480,20 +482,22 @@ readers never need it.
     this CVE, so none carries the fix — permanently vulnerable.
 - **NixOS** (via the local nixpkgs clone at the channel revision pins
   and at the branch tips):
-  - every tracked ref resolves `linux_default` to `linux_6_18` and
-    `linux_latest` to `linux_7_1`, so the verdict turns only on which
-    point release each has reached.
-  - `master` carries 6.18.44 / 7.1.8; it reached 6.18.42 in
+  - every tracked ref resolves `linux_default` to `linux_6_18`; `master`,
+    `release-26.05`, and nixos-26.05-small have moved `linux_latest` to
+    `linux_7_2`, the other four refs still resolve it to `linux_7_1` — the
+    verdict turns only on which point release each has reached.
+  - `master` carries 6.18.44 / 7.2; it reached 6.18.42 in
     `b658e06342e8`.
-  - `release-26.05` carries 6.18.44 / 7.1.8; it reached 6.18.42 in
+  - `release-26.05` carries 6.18.44 / 7.2; it reached 6.18.42 in
     `33565191d37a`.
   - nixos-unstable carries 6.18.44 / 7.1.8.
   - nixos-unstable-small carries 6.18.44 / 7.1.8.
   - nixpkgs-unstable carries 6.18.44 / 7.1.8.
   - nixos-26.05 carries 6.18.44 / 7.1.8.
-  - nixos-26.05-small carries 6.18.44 / 7.1.8.
+  - nixos-26.05-small carries 6.18.44 / 7.2.
   - every one of those point releases is at or above the fixed release
-    on its track (6.18.42, 7.1.6), so both tracks are fixed everywhere.
+    on its track (6.18.42, 7.1.6, and mainline 7.2 which carries the fix
+    from 7.2-rc5), so both tracks are fixed everywhere.
   - each channel's *Fixed since* is the first published release whose
     revision contains its branch's 6.18.42 commit, resolved from the
     nix-releases bucket rather than stamped from the branch date.
