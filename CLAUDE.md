@@ -838,7 +838,18 @@ accumulate every point release's kernel, so pick the numerically-highest
   `kernel` 6.1, opt-in `kernel6.12`, `kernel6.18`), and read current versions
   from `primary.xml.gz`.  AL2023 (6.1) and AL2 (4.14) are both in-window for
   Zapscape.  Mirror: `…/al2023/core/mirrors/latest/x86_64/mirror.list`.
-  (AL2 is EOL and untracked — no AL2 repodata pulls.)
+  (AL2 is EOL and untracked — no AL2 repodata pulls.)  **A CVE-grep
+  miss can also mean the mapping is not published yet**, not that no
+  fix exists: an ALAS lists only the CVEs known when it was issued,
+  and amendments reach the repodata only when Amazon cuts the next
+  immutable release snapshot — `mirrors/latest` moves in discrete
+  jumps (for OVSwrap's CVE-2026-64531 the cross-reference trailed the
+  2026-07-27 advisories by three weeks).  Amazon also backports fixes
+  into builds *below* the series' upstream first-fixed release, so no
+  version threshold can flip the row either.  When a kernel-stream
+  security ALAS from around the disclosure window ships a build the
+  stream has since adopted while the CVE grep still misses, look
+  closer before recording "no ALAS".
 
 ## Debian kernel version source
 
