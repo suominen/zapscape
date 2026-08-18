@@ -45,6 +45,10 @@ Amazon (no ALAS yet) do not — so several rows are `:x:` and expected to
 flip.  Watch the Red Hat security data API and the distro repodata for
 adoption, and edit only the lines whose facts change.
 
+To retire (archive) this tracker — when every tracked distribution has
+shipped a fix, or the bug is otherwise no longer worth active tracking —
+follow `~/src/cve-tracker-template/LIFECYCLE.md` § "Retiring a tracker".
+
 ## Repo layout
 
 ```
