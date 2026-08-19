@@ -119,6 +119,7 @@ row is vulnerable).
 | Debian | forky (testing) | 7.1.8-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.101-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
 | Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable |
+| Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed |
 | Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable |
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable |
 | Proxmox VE | 9 (default) | 7.0.14-12-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
@@ -163,16 +164,18 @@ Debian's `linux` is affected in every suite (the bug predates all of them);
 the security tracker's CVE-2026-64561 record drove these assessments.
 **trixie** (stable) shipped the fix as **6.12.101-1** via `trixie-security`
 under **DSA-6415-1** (2026-08-06), and **sid**/**forky** carry 7.1.6-1 or
-newer. **bookworm** (6.1.y) and **bullseye** (5.10.y) are stranded: no
-upstream backport exists for either line, so the security team has nothing
-to ship and both remain `:x:` — bookworm's opt-in `linux-6.1` package is on
-the same fix-less 6.1.y branch and does not help here (contrast Januscape,
-where the 6.1 opt-in *did* carry the fix). A bookworm host that needs the
-fix today can move to the `bookworm-backports` 6.12 kernel once it reaches
-≥ 6.12.101, or restrict KVM access. Debian keeps `/dev/kvm` owned
-`root:kvm` mode `0660`, so the unprivileged *local* vector needs
-`kvm`-group membership there; the guest-escape vector is unaffected by
-that.
+newer. **bookworm**'s default kernel (6.1.y) and **bullseye** (5.10.y) are
+stranded: no upstream backport exists for either line, so the security team
+has nothing to ship for the defaults, and both remain `:x:` — bullseye's
+opt-in `linux-6.1` package is on the same fix-less 6.1.y branch and does not
+help here (contrast Januscape, where the 6.1 opt-in *did* carry the fix).
+bookworm does have a way off that line: Debian published a new opt-in
+**`linux-6.12`** source package straight to `bookworm-security` at
+**6.12.101-1~deb12u1** (2026-08-15), already carrying the fix — a bookworm
+host can install it to get off the vulnerable default without waiting on a
+6.1.y backport. Debian keeps `/dev/kvm` owned `root:kvm` mode `0660`, so the
+unprivileged *local* vector needs `kvm`-group membership there; the
+guest-escape vector is unaffected by that.
 
 ### Proxmox VE
 
@@ -465,8 +468,13 @@ readers never need it.
     suite snapshot still lags at `7.1.6-1`) — fixed.
   - stable/trixie — `6.12.101-1` via `trixie-security` (**DSA-6415-1**,
     2026-08-06, lists CVE-2026-64561) — fixed.
-  - oldstable/bookworm — `6.1.180-1` (`bookworm-security`) on the 6.1.y
-    line; no upstream backport, tracker marks vulnerable — vulnerable.
+  - oldstable/bookworm default — `6.1.180-1` (`bookworm-security`) on the
+    6.1.y line; no upstream backport, tracker marks vulnerable —
+    vulnerable.
+  - oldstable/bookworm opt-in `linux-6.12` — new source package, first
+    published straight to `bookworm-security` at `6.12.101-1~deb12u1`
+    (madison lists it as `new`; snapshot.debian.org `first_seen`
+    2026-08-15), already carrying the fix — fixed.
   - LTS/bullseye default — `5.10.262-1` (`bullseye-security`); no 5.10.y
     backport — vulnerable.
   - LTS/bullseye opt-in `linux-6.1` — `6.1.180-1~deb11u1`; on the fix-less
