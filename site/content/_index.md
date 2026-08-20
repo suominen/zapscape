@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-19
+lastmod: 2026-08-20
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -21,7 +21,7 @@ cover:
 | Impact | A malicious guest can execute code as **root on the host**; where `/dev/kvm` is world-accessible (the EL8+ default) an unprivileged **local** user can trigger the same bug. Reaching the shadow MMU needs **nested virtualization**. Intel **and** AMD x86 |
 | Upstream fix | [`2abd5287f083`][fix] (*KVM: x86: Check for invalid/obsolete root \*after\* making MMU pages available*); first in **v7.2-rc5** |
 | Introduced | [`f95eec9bed76`][intro] in **v5.9** (2020) — the invariant that made populating an invalid root corrupting; the underlying zapped-root reuse dates to `2e53d63acba7` (2008) |
-| Affected window | Kernels **5.9 through 7.1** (and 7.2 before `-rc5`) without the backport; ≥ 7.2-rc5, plus the 6.6 / 6.12 / 6.18 / 7.1 stable backports, are fixed |
+| Affected window | Kernels **5.9 through 7.1** (and 7.2 before `-rc5`) without the backport; ≥ 7.2-rc5, plus the 6.1 / 6.6 / 6.12 / 6.18 / 7.1 stable backports, are fixed |
 | Discoverer | Hyunwoo Kim ([`@v4bel`][poc]) |
 | Public disclosure | 2026-08-06 (researcher writeup / PoC; CVE record published 2026-08-04) |
 | Public PoC | [V4bel/Zapscape][poc] (reported to crash the guest rather than escape on CloudLinux-built kernels) |
@@ -94,10 +94,10 @@ below is inside the affected window and stays vulnerable until it ships the
 fix. `/dev/kvm` exposure and nested-virt defaults change *who* can reach
 the bug, not whether the kernel is fixed.
 
-Unusually for this family, the fix has so far been backported to only the
-**6.6, 6.12, 6.18, and 7.1** stable lines (all on 2026-08-03); the **6.1,
-5.15, and 5.10** LTS lines carry no fix yet, so the distributions still
-riding them are vulnerable with nothing upstream to adopt. The first group
+Unusually for this family, the fix reached the **6.6, 6.12, 6.18, and 7.1**
+stable lines first (all on 2026-08-03); **6.1** picked it up on 2026-08-19.
+The **5.15** and **5.10** LTS lines carry no fix yet, so the distributions
+still riding them are vulnerable with nothing upstream to adopt. The first group
 tracks the upstream kernel itself; the rest are a focused set of x86-64
 distributions (other systems named in the disclosures appear only in
 prose). *Current kernel* is the latest version observed in the row's
@@ -108,13 +108,13 @@ row is vulnerable).
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
 | Linux kernel | mainline | 7.2 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
-| Linux kernel | 7.1.x | 7.1.8 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
-| Linux kernel | 6.18.x | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.12.x | 6.12.103 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.6.x | 6.6.151 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.1.x | 6.1.182 | — | — | :x: Vulnerable |
-| Linux kernel | 5.15.x | 5.15.215 | — | — | :x: Vulnerable |
-| Linux kernel | 5.10.x | 5.10.264 | — | — | :x: Vulnerable |
+| Linux kernel | 7.1.x | 7.1.9 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
+| Linux kernel | 6.18.x | 6.18.45 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.12.x | 6.12.104 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.6.x | 6.6.152 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.1.x | 6.1.183 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.15.x | 5.15.216 | — | — | :x: Vulnerable |
+| Linux kernel | 5.10.x | 5.10.265 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.8-2 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.8-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.101-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
@@ -124,13 +124,13 @@ row is vulnerable).
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable |
 | Proxmox VE | 9 (default) | 7.0.14-12-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-42-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | master | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | release-26.05 | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | master | 6.18.45 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | release-26.05 | 6.18.45 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.44 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
-| NixOS | Unstable (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable (small) | 6.18.45 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.44 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.44 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | 26.05 (small) | 6.18.44 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | 26.05 (small) | 6.18.45 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.47.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.39.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.156.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
@@ -143,15 +143,14 @@ row is vulnerable).
 
 The fix reached Linus as **v7.2-rc5** (2026-07-26) and the stable team
 backported it to the 7.1, 6.18, 6.12, and 6.6 lines on 2026-08-03 (7.1.6,
-6.18.42, 6.12.101, and 6.6.148). The **7.0.y** line reached end of life at
-7.0.14 on 2026-06-27 without the backport; a host still on it is in-window
-and permanently vulnerable. The **6.1.y, 5.15.y, and 5.10.y** LTS lines are
-still maintained but carry no fix yet. The fix applies cleanly to 6.1.y
-(`is_page_fault_stale()` and `make_mmu_pages_available()` both exist there),
-so a 6.1 backport is plausible on a later stable release; 5.15.y and 5.10.y
-predate `is_page_fault_stale()` and carry the stale-root check in an older
-shape, so a fix there would need adaptation. None of the three has picked
-the fix up as of the current point releases (6.1.182, 5.15.215, 5.10.264).
+6.18.42, 6.12.101, and 6.6.148), then to **6.1.y** on 2026-08-19 (6.1.183).
+The **7.0.y** line reached end of life at 7.0.14 on 2026-06-27 without the
+backport; a host still on it is in-window and permanently vulnerable. The
+**5.15.y and 5.10.y** LTS lines are still maintained but carry no fix yet:
+both predate `is_page_fault_stale()` and carry the stale-root check in an
+older shape, so a fix there would need adaptation, unlike 6.1.y where the
+fix applied cleanly. Neither has picked the fix up as of the current point
+releases (5.15.216, 5.10.265).
 
 When verifying a tree directly, the reordered calls are in
 `direct_page_fault()` in `arch/x86/kvm/mmu/mmu.c` and `FNAME(page_fault)`
@@ -164,12 +163,12 @@ Debian's `linux` is affected in every suite (the bug predates all of them);
 the security tracker's CVE-2026-64561 record drove these assessments.
 **trixie** (stable) shipped the fix as **6.12.101-1** via `trixie-security`
 under **DSA-6415-1** (2026-08-06), and **sid**/**forky** carry 7.1.6-1 or
-newer. **bookworm**'s default kernel (6.1.y) and **bullseye** (5.10.y) are
-stranded: no upstream backport exists for either line, so the security team
-has nothing to ship for the defaults, and both remain `:x:` — bullseye's
-opt-in `linux-6.1` package is on the same fix-less 6.1.y branch and does not
-help here (contrast Januscape, where the 6.1 opt-in *did* carry the fix).
-bookworm does have a way off that line: Debian published a new opt-in
+newer. **bookworm**'s default kernel and bullseye's opt-in `linux-6.1`
+package both ride 6.1.y, which gained an upstream fix (6.1.183, 2026-08-19)
+after the security tracker's last check — Debian has not yet backported it,
+so both remain `:x:` pending that pickup. **bullseye**'s default (5.10.y)
+has no upstream fix to adopt at all and remains stranded. bookworm does
+have a way off its line already today: Debian published a new opt-in
 **`linux-6.12`** source package straight to `bookworm-security` at
 **6.12.101-1~deb12u1** (2026-08-15), already carrying the fix — a bookworm
 host can install it to get off the vulnerable default without waiting on a
@@ -198,12 +197,11 @@ fix is to boot the release's current default kernel.
 
 ### NixOS
 
-Every tracked ref's default `linuxPackages` is `linux_6_18`, and its
-`linuxPackages_latest` is fixed everywhere too — `linux_7_2` on `master`,
-`release-26.05`, and `nixos-26.05-small`, still `linux_7_1` on the other
-four refs (the alias bump hasn't reached them yet). Both tracks sit on
-fixed point releases everywhere, so all of these rows are fixed; they
-differ only in which point release they have reached. Kernel updates land on
+Every tracked ref's default `linuxPackages` is `linux_6_18`, and every
+ref's `linuxPackages_latest` alias has now moved to `linux_7_2` as well.
+Both tracks sit on fixed point releases everywhere, so all of these rows
+are fixed; they differ only in which point release they have reached.
+Kernel updates land on
 nixpkgs `master` first, and each channel publishes them once its Hydra
 jobset passes. A channel can therefore sit days behind `master`, and an
 unstable channel is not necessarily ahead of a release channel.  The
@@ -406,12 +404,14 @@ until patched.
   through it; treat that as a scoping aid, not a substitute for patching a
   host that runs untrusted guests.
 - **Backports are narrow (CVE-2026-64561):** the fix has landed in 7.1.6,
-  6.18.42, 6.12.101, and 6.6.148, but the 6.1.y, 5.15.y, and 5.10.y LTS
-  lines — and the distro kernels riding them (Debian bookworm/bullseye and
-  Amazon AL2023's default and 6.18 opt-in streams) — carry no fix yet.
-  Amazon has cherry-picked the fix into its 6.12 opt-in stream
-  independently (ALAS2023-2026-2057). Check the distribution row for your
-  kernel.
+  6.18.42, 6.12.101, 6.6.148, and — as of 2026-08-19 — 6.1.183, but the
+  5.15.y and 5.10.y LTS lines carry no fix yet. Debian's bookworm default
+  and bullseye's opt-in `linux-6.1` now have an upstream 6.1.y fix to
+  adopt but have not yet done so; Amazon AL2023's default kernel stream
+  is in the same position. Amazon's 6.18 opt-in stream and Debian's
+  bullseye default sit on lines with no upstream fix at all. Amazon has
+  cherry-picked the fix into its 6.12 opt-in stream independently
+  (ALAS2023-2026-2057). Check the distribution row for your kernel.
 
 ## Verification log
 
@@ -436,15 +436,17 @@ readers never need it.
 - **CVE-2026-64561** assigned by the kernel CNA (record and `.dyad`
   confirmed via `~/src/linux/vulns` `origin/master`, keyed on
   `2abd5287f083`). The dyad's vulnerable:fixed pairs are
-  `5.9:…:6.6.148`, `6.12.101`, `6.18.42`, `7.1.6`, and `7.2-rc5` — **no
-  6.1.y / 5.15.y / 5.10.y pair**.
+  `5.9:…:6.1.183`, `6.6.148`, `6.12.101`, `6.18.42`, `7.1.6`, and
+  `7.2-rc5` — **no 5.15.y / 5.10.y pair**.
 - **Stable backports** (confirmed by subject grep against
   `~/src/linux/stable`): present in `linux-7.1.y` (`bce0d3c26e2c`),
   `linux-6.18.y` (`f3477a6a4164`), `linux-6.12.y` (`0026dbb7de8e`), and
-  `linux-6.6.y` (`35e77467610c`), all tagged 2026-08-03. `linux-6.1.y`,
-  `linux-5.15.y`, and `linux-5.10.y` return no match; `is_page_fault_stale`
-  is present in 6.1.y but absent from the 5.15.y/5.10.y MMU sources.
-  7.0.y is EOL at 7.0.14 (2026-06-27) without the fix.
+  `linux-6.6.y` (`35e77467610c`), all tagged 2026-08-03, and in
+  `linux-6.1.y` (`65c4f7a1028c`), first in tag `v6.1.183` (tag date
+  2026-08-19). `linux-5.15.y` and `linux-5.10.y` return no match;
+  `is_page_fault_stale` is absent from both lines' MMU sources, so a fix
+  there needs adaptation. 7.0.y is EOL at 7.0.14 (2026-06-27) without the
+  fix.
 
 #### Scoring
 
@@ -493,19 +495,18 @@ readers never need it.
     this CVE, so none carries the fix — permanently vulnerable.
 - **NixOS** (via the local nixpkgs clone at the channel revision pins
   and at the branch tips):
-  - every tracked ref resolves `linux_default` to `linux_6_18`; `master`,
-    `release-26.05`, and nixos-26.05-small have moved `linux_latest` to
-    `linux_7_2`, the other four refs still resolve it to `linux_7_1` — the
-    verdict turns only on which point release each has reached.
-  - `master` carries 6.18.44 / 7.2; it reached 6.18.42 in
+  - every tracked ref resolves `linux_default` to `linux_6_18` and
+    `linux_latest` to `linux_7_2` — the verdict turns only on which point
+    release each has reached.
+  - `master` carries 6.18.45 / 7.2; it reached 6.18.42 in
     `b658e06342e8`.
-  - `release-26.05` carries 6.18.44 / 7.2; it reached 6.18.42 in
+  - `release-26.05` carries 6.18.45 / 7.2; it reached 6.18.42 in
     `33565191d37a`.
-  - nixos-unstable carries 6.18.44 / 7.1.8.
-  - nixos-unstable-small carries 6.18.44 / 7.1.8.
-  - nixpkgs-unstable carries 6.18.44 / 7.1.8.
-  - nixos-26.05 carries 6.18.44 / 7.1.8.
-  - nixos-26.05-small carries 6.18.44 / 7.2.
+  - nixos-unstable carries 6.18.44 / 7.1.9.
+  - nixos-unstable-small carries 6.18.45 / 7.1.9.
+  - nixpkgs-unstable carries 6.18.44 / 7.1.9.
+  - nixos-26.05 carries 6.18.44 / 7.1.9.
+  - nixos-26.05-small carries 6.18.45 / 7.2.
   - every one of those point releases is at or above the fixed release
     on its track (6.18.42, 7.1.6, and mainline 7.2 which carries the fix
     from 7.2-rc5), so both tracks are fixed everywhere.
