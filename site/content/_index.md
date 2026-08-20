@@ -82,9 +82,9 @@ as stale and the fault retried instead of populated.
 | [`2abd5287f083`][fix] | Fixed | *KVM: x86: Check for invalid/obsolete root \*after\* making MMU pages available* — reorders the stale-fault check to run after `make_mmu_pages_available()`, so a root zapped by reclamation is caught before any mapping is installed; first released in **v7.2-rc5**. |
 
 The reachable lifetime is therefore **v5.9 (2020) through v7.1**; the fix
-is in mainline ≥ 7.2-rc5 and the 6.6 / 6.12 / 6.18 / 7.1 stable backports.
-ARM64 KVM uses a different MMU and is **not affected** by this bug — see
-[ITScape][itscape] for that researcher's arm64 escape.
+is in mainline ≥ 7.2-rc5 and the 6.1 / 6.6 / 6.12 / 6.18 / 7.1 stable
+backports. ARM64 KVM uses a different MMU and is **not affected** by
+this bug — see [ITScape][itscape] for that researcher's arm64 escape.
 
 ## Patch status
 
@@ -149,8 +149,7 @@ backport; a host still on it is in-window and permanently vulnerable. The
 **5.15.y and 5.10.y** LTS lines are still maintained but carry no fix yet:
 both predate `is_page_fault_stale()` and carry the stale-root check in an
 older shape, so a fix there would need adaptation, unlike 6.1.y where the
-fix applied cleanly. Neither has picked the fix up as of the current point
-releases (5.15.216, 5.10.265).
+fix applied cleanly. Neither has picked the fix up.
 
 When verifying a tree directly, the reordered calls are in
 `direct_page_fault()` in `arch/x86/kvm/mmu/mmu.c` and `FNAME(page_fault)`
@@ -201,9 +200,8 @@ Every tracked ref's default `linuxPackages` is `linux_6_18`, and every
 ref's `linuxPackages_latest` alias has now moved to `linux_7_2` as well.
 Both tracks sit on fixed point releases everywhere, so all of these rows
 are fixed; they differ only in which point release they have reached.
-Kernel updates land on
-nixpkgs `master` first, and each channel publishes them once its Hydra
-jobset passes. A channel can therefore sit days behind `master`, and an
+Kernel updates land on nixpkgs `master` first, and each channel
+publishes them once its Hydra jobset passes. A channel can therefore sit days behind `master`, and an
 unstable channel is not necessarily ahead of a release channel.  The
 `-small` channels (`nixos-unstable-small`, `nixos-26.05-small`) are
 gated on a reduced jobset and pick up kernel updates fastest.
@@ -240,11 +238,9 @@ RHEL 10.0 EUS (RHSA-2026:49030, `6.12.0-55.94.1.el10_0`), RHEL 8.8
 TUS/E4S (RHSA-2026:47869, `4.18.0-477.156.1.el8_8`), RHEL 9.4 E4S
 (RHSA-2026:48386, `5.14.0-427.141.1.el9_4`), and RHEL 9.6 EUS
 (RHSA-2026:49031, `5.14.0-570.131.1.el9_6`). Rocky has rebuilt past all
-three general-stream fixes — 8 at `4.18.0-553.153.1.el8_10` (published
-2026-07-26), 9 at `5.14.0-687.36.1.el9_8` (published 2026-07-27), 10 at
-`6.12.0-211.44.1.el10_2` (published 2026-07-26) — so **Rocky 8, 9, and 10
-are all `:white_check_mark:`**. Upstream, the whole RHEL family, and
-CloudLinux are now fixed.
+three general-stream fixes (8 and 10 on 2026-07-26, 9 on 2026-07-27),
+so **Rocky 8, 9, and 10 are all `:white_check_mark:`**. Upstream, the
+whole RHEL family, and CloudLinux are now fixed.
 
 **CloudLinux** patches its own `.lve` kernel builds directly and is ahead
 of Red Hat: per its advisory, **CloudLinux 9** already ships a fixed
@@ -262,11 +258,10 @@ the repodata `updateinfo.xml` (the per-CVE ALAS pages are JS-rendered and
 don't fetch headlessly). **ALAS2023-2026-2057** (2026-08-17, Important)
 fixed the `kernel6.12` stream at `6.12.100-125.179` — an Amazon-specific
 cherry-pick, since that build sits below the upstream 6.12.101 threshold.
-The default `kernel` (a 6.1 series, on the fix-less 6.1.y line — a fix
-there would need an Amazon cherry-pick, at `6.1.180-225.360`) and
-`kernel6.18` (`6.18.41-94.142`, below the 6.18.42 fix) carry no ALAS for
-this CVE yet; `kernel6.18` should flip on a routine rebase to the fixed
-point release.
+The default `kernel` (the 6.1 line, whose upstream 6.1.183 fix Amazon
+has not yet picked up) and the `kernel6.18` opt-in (still below the
+6.18.42 first fix) carry no ALAS for this CVE yet; `kernel6.18` should
+flip on a routine rebase to a fixed point release.
 
 **AL2** (amzn2) is not tracked here: it reached end of support on
 **2026-06-30** — before this tracker existed — with no ALAS for this CVE.
@@ -464,23 +459,25 @@ readers never need it.
 #### Distributions
 
 - **Debian** (via the Debian security tracker + `madison`):
-  - unstable/sid — `7.1.8-2` per `madison`; the tracker records the fix
-    from `7.1.6-1` (entered unstable 2026-08-03) — fixed.
-  - testing/forky — `7.1.8-1` per `madison` (the security tracker's own
-    suite snapshot still lags at `7.1.6-1`) — fixed.
-  - stable/trixie — `6.12.101-1` via `trixie-security` (**DSA-6415-1**,
-    2026-08-06, lists CVE-2026-64561) — fixed.
-  - oldstable/bookworm default — `6.1.180-1` (`bookworm-security`) on the
-    6.1.y line; no upstream backport, tracker marks vulnerable —
-    vulnerable.
+  - unstable/sid — the tracker records the fix from `7.1.6-1` (entered
+    unstable 2026-08-03) — fixed.
+  - testing/forky — `madison` shows the suite on the 7.1 kernel, past
+    the `7.1.6-1` first fix — fixed.
+  - stable/trixie — first fixed `6.12.101-1` via `trixie-security`
+    (**DSA-6415-1**, 2026-08-06, lists CVE-2026-64561) — fixed.
+  - oldstable/bookworm default — on the 6.1.y line
+    (`bookworm-security`); Debian has not adopted the 6.1.183 upstream
+    fix, tracker marks vulnerable — vulnerable.
   - oldstable/bookworm opt-in `linux-6.12` — new source package, first
     published straight to `bookworm-security` at `6.12.101-1~deb12u1`
     (madison lists it as `new`; snapshot.debian.org `first_seen`
     2026-08-15), already carrying the fix — fixed.
-  - LTS/bullseye default — `5.10.262-1` (`bullseye-security`); no 5.10.y
-    backport — vulnerable.
-  - LTS/bullseye opt-in `linux-6.1` — `6.1.180-1~deb11u1`; on the fix-less
-    6.1.y line, no tracker entry for this CVE — vulnerable.
+  - LTS/bullseye default — on the 5.10.y line (`bullseye-security`); no
+    5.10.y backport — vulnerable.
+  - LTS/bullseye opt-in `linux-6.1` — rebuilds the 6.1 line below the
+    6.1.183 fix, no tracker entry for this CVE — vulnerable.
+  - The rows' *Current kernel* values come from `madison` and the
+    tracker's `<suite>-security` `repositories` entries.
 - **Proxmox VE** (fixed kernels confirmed in `~/src/proxmox/pve-kernel`
   and `pve-no-subscription` Packages.gz):
   - PVE 9 default — `proxmox-kernel-7.0.14-9-pve` cherry-picks
@@ -496,20 +493,15 @@ readers never need it.
 - **NixOS** (via the local nixpkgs clone at the channel revision pins
   and at the branch tips):
   - every tracked ref resolves `linux_default` to `linux_6_18` and
-    `linux_latest` to `linux_7_2` — the verdict turns only on which point
-    release each has reached.
-  - `master` carries 6.18.45 / 7.2; it reached 6.18.42 in
-    `b658e06342e8`.
-  - `release-26.05` carries 6.18.45 / 7.2; it reached 6.18.42 in
+    `linux_latest` to `linux_7_2`, and each ref's point release on both
+    tracks is at or above the fixed release for its track (6.18.42;
+    7.1.6 / mainline 7.2, which carries the fix from 7.2-rc5) — so both
+    tracks are fixed everywhere.
+  - `master` reached 6.18.42 in `b658e06342e8`; `release-26.05` in
     `33565191d37a`.
-  - nixos-unstable carries 6.18.44 / 7.1.9.
-  - nixos-unstable-small carries 6.18.45 / 7.1.9.
-  - nixpkgs-unstable carries 6.18.44 / 7.1.9.
-  - nixos-26.05 carries 6.18.44 / 7.1.9.
-  - nixos-26.05-small carries 6.18.45 / 7.2.
-  - every one of those point releases is at or above the fixed release
-    on its track (6.18.42, 7.1.6, and mainline 7.2 which carries the fix
-    from 7.2-rc5), so both tracks are fixed everywhere.
+  - each row's *Current kernel* is the `6.18` version `kernels-org.json`
+    resolves at that ref (branch tips from the clone, channels via
+    their `git-revision` pins).
   - each channel's *Fixed since* is the first published release whose
     revision contains its branch's 6.18.42 commit, resolved from the
     nix-releases bucket rather than stamped from the branch date.
@@ -529,17 +521,16 @@ readers never need it.
     `5.14.0-427.141.1.el9_4`), RHEL 9.6 EUS (RHSA-2026:49031,
     `5.14.0-570.131.1.el9_6`). RHEL 6/7 Not affected.
   - Rocky 8 BaseOS repodata reaches `4.18.0-553.147.1.el8_10` exactly
-    (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26), confirming
-    the RHSA build; current is `4.18.0-553.156.1.el8_10` — fixed since
-    2026-07-26.
+    (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26),
+    confirming the RHSA build — fixed since 2026-07-26.
   - Rocky 9 BaseOS repodata reaches `5.14.0-687.30.1.el9_8` exactly
     (primary.xml.gz build/file epochs both 2026-07-27), confirming the
-    RHSA build; current is `5.14.0-687.39.1.el9_8` — fixed since
-    2026-07-27.
+    RHSA build — fixed since 2026-07-27.
   - Rocky 10 BaseOS repodata reaches `6.12.0-211.39.1.el10_2` exactly
-    (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26), confirming
-    the RHSA build; current is `6.12.0-211.47.1.el10_2` — fixed since
-    2026-07-26.
+    (primary.xml.gz build/file epochs 2026-07-24 / 2026-07-26),
+    confirming the RHSA build — fixed since 2026-07-26.
+  - The Rocky rows' *Current kernel* NVRs are read from BaseOS repodata
+    (`primary.xml.gz`, highest `rel`).
   - **CloudLinux** (via its advisory blog): CL 9 ships fixed
     `kernel-5.14.0-687.30.1.el9_8`+ in stable; CL 7h/8 have
     `kernel-4.18.0-553.150.1.lve`+ in the testing repos; CL 8 LTS / 9 LTS
@@ -549,9 +540,10 @@ readers never need it.
     **ALAS2023-2026-2057** (2026-08-17, Important) — fixed; the build sits
     below the upstream 6.12.101 threshold, confirming an Amazon-specific
     backport rather than a rebase.
-  - AL2023 `kernel` `6.1.180-225.360` (6.1.y, no upstream backport) and
-    `kernel6.18` `6.18.41-94.142` (< 6.18.42) carry no ALAS for this CVE —
-    vulnerable.
+  - AL2023 `kernel` (6.1.y — Amazon has not picked up the 6.1.183
+    upstream fix) and `kernel6.18` (below the 6.18.42 first fix) carry
+    no ALAS for this CVE — vulnerable.
+  - The streams' *Current kernel* values are read from `primary.xml.gz`.
   - AL2 (amzn2) reached end of support 2026-06-30 with no ALAS for this
     CVE; its 5.10 / 5.15 extras kernels are permanently vulnerable, the
     4.14 default not affected.
