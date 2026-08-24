@@ -126,7 +126,7 @@ row is vulnerable).
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.46 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.46 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable | 6.18.44 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
+| NixOS | Unstable | 6.18.45 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.45 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.45 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.45 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
