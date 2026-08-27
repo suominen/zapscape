@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-26
+lastmod: 2026-08-27
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -21,7 +21,7 @@ cover:
 | Impact | A malicious guest can execute code as **root on the host**; where `/dev/kvm` is world-accessible (the EL8+ default) an unprivileged **local** user can trigger the same bug. Reaching the shadow MMU needs **nested virtualization**. Intel **and** AMD x86 |
 | Upstream fix | [`2abd5287f083`][fix] (*KVM: x86: Check for invalid/obsolete root \*after\* making MMU pages available*); first in **v7.2-rc5** |
 | Introduced | [`f95eec9bed76`][intro] in **v5.9** (2020) — the invariant that made populating an invalid root corrupting; the underlying zapped-root reuse dates to `2e53d63acba7` (2008) |
-| Affected window | Kernels **5.9 through 7.1** (and 7.2 before `-rc5`) without the backport; ≥ 7.2-rc5, plus the 6.1 / 6.6 / 6.12 / 6.18 / 7.1 stable backports, are fixed |
+| Affected window | Kernels **5.9 through 7.1** (and 7.2 before `-rc5`) without the backport; ≥ 7.2-rc5, plus the 5.15 / 6.1 / 6.6 / 6.12 / 6.18 / 7.1 stable backports, are fixed |
 | Discoverer | Hyunwoo Kim ([`@v4bel`][poc]) |
 | Public disclosure | 2026-08-06 (researcher writeup / PoC; CVE record published 2026-08-04) |
 | Public PoC | [V4bel/Zapscape][poc] (reported to crash the guest rather than escape on CloudLinux-built kernels) |
@@ -82,7 +82,7 @@ as stale and the fault retried instead of populated.
 | [`2abd5287f083`][fix] | Fixed | *KVM: x86: Check for invalid/obsolete root \*after\* making MMU pages available* — reorders the stale-fault check to run after `make_mmu_pages_available()`, so a root zapped by reclamation is caught before any mapping is installed; first released in **v7.2-rc5**. |
 
 The reachable lifetime is therefore **v5.9 (2020) through v7.1**; the fix
-is in mainline ≥ 7.2-rc5 and the 6.1 / 6.6 / 6.12 / 6.18 / 7.1 stable
+is in mainline ≥ 7.2-rc5 and the 5.15 / 6.1 / 6.6 / 6.12 / 6.18 / 7.1 stable
 backports. ARM64 KVM uses a different MMU and is **not affected** by
 this bug — see [ITScape][itscape] for that researcher's arm64 escape.
 
@@ -95,9 +95,10 @@ fix. `/dev/kvm` exposure and nested-virt defaults change *who* can reach
 the bug, not whether the kernel is fixed.
 
 Unusually for this family, the fix reached the **6.6, 6.12, 6.18, and 7.1**
-stable lines first (all on 2026-08-03); **6.1** picked it up on 2026-08-19.
-The **5.15** and **5.10** LTS lines carry no fix yet, so the distributions
-still riding them are vulnerable with nothing upstream to adopt. The first group
+stable lines first (all on 2026-08-03); **6.1** picked it up on 2026-08-19,
+and **5.15** on 2026-08-27. The **5.10** LTS line carries no fix yet, so the
+distributions still riding it are vulnerable with nothing upstream to
+adopt. The first group
 tracks the upstream kernel itself; the rest are a focused set of x86-64
 distributions (other systems named in the disclosures appear only in
 prose). *Current kernel* is the latest version observed in the row's
@@ -107,14 +108,14 @@ row is vulnerable).
 
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
-| Linux kernel | mainline | 7.2 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
-| Linux kernel | 7.1.x | 7.1.10 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
-| Linux kernel | 6.18.x | 6.18.46 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.12.x | 6.12.105 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.6.x | 6.6.153 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.1.x | 6.1.184 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.15.x | 5.15.217 | — | — | :x: Vulnerable |
-| Linux kernel | 5.10.x | 5.10.266 | — | — | :x: Vulnerable |
+| Linux kernel | mainline | 7.2.1 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
+| Linux kernel | 7.1.x | 7.1.11 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
+| Linux kernel | 6.18.x | 6.18.47 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.12.x | 6.12.106 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.6.x | 6.6.154 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.1.x | 6.1.185 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.15.x | 5.15.218 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.10.x | 5.10.267 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.10-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.8-2 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.105-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
@@ -132,8 +133,8 @@ row is vulnerable).
 | NixOS | 26.05 | 6.18.46 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.46 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.49.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
-| Rocky Linux | 9 | 5.14.0-687.41.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
-| Rocky Linux | 8 | 4.18.0-553.157.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
+| Rocky Linux | 9 | 5.14.0-687.42.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
+| Rocky Linux | 8 | 4.18.0-553.158.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.180-225.360 | — | — | :x: Vulnerable — no ALAS yet |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.100-125.179 | 6.12.100-125.179 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2057 |
 | Amazon Linux | 2023 (6.18 opt-in) | 6.18.41-94.142 | — | — | :x: Vulnerable — no ALAS yet |
@@ -143,13 +144,13 @@ row is vulnerable).
 
 The fix reached Linus as **v7.2-rc5** (2026-07-26) and the stable team
 backported it to the 7.1, 6.18, 6.12, and 6.6 lines on 2026-08-03 (7.1.6,
-6.18.42, 6.12.101, and 6.6.148), then to **6.1.y** on 2026-08-19 (6.1.183).
-The **7.0.y** line reached end of life at 7.0.14 on 2026-06-27 without the
-backport; a host still on it is in-window and permanently vulnerable. The
-**5.15.y and 5.10.y** LTS lines are still maintained but carry no fix yet:
-both predate `is_page_fault_stale()` and carry the stale-root check in an
-older shape, so a fix there would need adaptation, unlike 6.1.y where the
-fix applied cleanly. Neither has picked the fix up.
+6.18.42, 6.12.101, and 6.6.148), then to **6.1.y** on 2026-08-19 (6.1.183),
+and to **5.15.y** on 2026-08-27 (5.15.218). The **7.0.y** line reached end
+of life at 7.0.14 on 2026-06-27 without the backport; a host still on it
+is in-window and permanently vulnerable. The **5.10.y** LTS line is still
+maintained but carries no fix yet: it predates `is_page_fault_stale()` and
+carries the stale-root check in an older shape, so a fix there needs
+adaptation, unlike 6.1.y and 5.15.y where the backport landed.
 
 When verifying a tree directly, the reordered calls are in
 `direct_page_fault()` in `arch/x86/kvm/mmu/mmu.c` and `FNAME(page_fault)`
@@ -399,14 +400,15 @@ until patched.
   through it; treat that as a scoping aid, not a substitute for patching a
   host that runs untrusted guests.
 - **Backports are narrow (CVE-2026-64561):** the fix has landed in 7.1.6,
-  6.18.42, 6.12.101, 6.6.148, and — as of 2026-08-19 — 6.1.183, but the
-  5.15.y and 5.10.y LTS lines carry no fix yet. Debian's bookworm default
-  and bullseye's opt-in `linux-6.1` now have an upstream 6.1.y fix to
-  adopt but have not yet done so; Amazon AL2023's default kernel stream
-  is in the same position. Amazon's 6.18 opt-in stream and Debian's
-  bullseye default sit on lines with no upstream fix at all. Amazon has
-  cherry-picked the fix into its 6.12 opt-in stream independently
-  (ALAS2023-2026-2057). Check the distribution row for your kernel.
+  6.18.42, 6.12.101, 6.6.148, 6.1.183 (2026-08-19), and 5.15.218
+  (2026-08-27), but the 5.10.y LTS line carries no fix yet. Debian's
+  bookworm default and bullseye's opt-in `linux-6.1` now have an upstream
+  6.1.y fix to adopt but have not yet done so; Amazon AL2023's default
+  kernel stream is in the same position. Amazon's 6.18 opt-in stream and
+  Debian's bullseye default sit on lines with no upstream fix at all.
+  Amazon has cherry-picked the fix into its 6.12 opt-in stream
+  independently (ALAS2023-2026-2057). Check the distribution row for
+  your kernel.
 
 ## Verification log
 
@@ -431,16 +433,17 @@ readers never need it.
 - **CVE-2026-64561** assigned by the kernel CNA (record and `.dyad`
   confirmed via `~/src/linux/vulns` `origin/master`, keyed on
   `2abd5287f083`). The dyad's vulnerable:fixed pairs are
-  `5.9:…:6.1.183`, `6.6.148`, `6.12.101`, `6.18.42`, `7.1.6`, and
-  `7.2-rc5` — **no 5.15.y / 5.10.y pair**.
+  `5.9:…:5.15.218`, `6.1.183`, `6.6.148`, `6.12.101`, `6.18.42`, `7.1.6`,
+  and `7.2-rc5` — **no 5.10.y pair**.
 - **Stable backports** (confirmed by subject grep against
   `~/src/linux/stable`): present in `linux-7.1.y` (`bce0d3c26e2c`),
   `linux-6.18.y` (`f3477a6a4164`), `linux-6.12.y` (`0026dbb7de8e`), and
-  `linux-6.6.y` (`35e77467610c`), all tagged 2026-08-03, and in
+  `linux-6.6.y` (`35e77467610c`), all tagged 2026-08-03; in
   `linux-6.1.y` (`65c4f7a1028c`), first in tag `v6.1.183` (tag date
-  2026-08-19). `linux-5.15.y` and `linux-5.10.y` return no match;
-  `is_page_fault_stale` is absent from both lines' MMU sources, so a fix
-  there needs adaptation. 7.0.y is EOL at 7.0.14 (2026-06-27) without the
+  2026-08-19); and in `linux-5.15.y` (`62ef67af1878`), first in tag
+  `v5.15.218` (tag date 2026-08-27). `linux-5.10.y` returns no match;
+  `is_page_fault_stale` is absent from its MMU sources, so a fix there
+  still needs adaptation. 7.0.y is EOL at 7.0.14 (2026-06-27) without the
   fix.
 
 #### Scoring
