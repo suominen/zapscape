@@ -108,14 +108,14 @@ row is vulnerable).
 
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
-| Linux kernel | mainline | 7.2.1 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
-| Linux kernel | 7.1.x | 7.1.11 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
-| Linux kernel | 6.18.x | 6.18.47 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.12.x | 6.12.106 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.6.x | 6.6.154 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.1.x | 6.1.185 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.15.x | 5.15.218 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.10.x | 5.10.267 | — | — | :x: Vulnerable |
+| Linux kernel | mainline | 7.2.2 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
+| Linux kernel | 7.1.x | 7.1.12 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
+| Linux kernel | 6.18.x | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.12.x | 6.12.107 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.6.x | 6.6.155 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.1.x | 6.1.186 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.15.x | 5.15.219 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.10.x | 5.10.268 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.10-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.8-2 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.105-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
@@ -125,12 +125,12 @@ row is vulnerable).
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable |
 | Proxmox VE | 9 (default) | 7.0.14-14-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | master | 6.18.47 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | release-26.05 | 6.18.47 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | master | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | release-26.05 | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.46 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.47 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.46 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
-| NixOS | 26.05 | 6.18.46 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
+| NixOS | 26.05 | 6.18.47 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.47 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.49.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.42.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
