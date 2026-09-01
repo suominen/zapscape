@@ -137,7 +137,7 @@ row is vulnerable).
 | Rocky Linux | 8 | 4.18.0-553.158.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.182-227.379 | 6.1.180-225.360 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2058 |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.103-127.188 | 6.12.100-125.179 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2057 |
-| Amazon Linux | 2023 (6.18 opt-in) | 6.18.44-99.149 | — | — | :x: Vulnerable — no ALAS yet |
+| Amazon Linux | 2023 (6.18 opt-in) | 6.18.44-99.149 | 6.18.41-94.142 | 2026-08-31 | :white_check_mark: Fixed — ALAS2023-2026-2071 |
 {.distros}
 
 ### Linux kernel
@@ -259,11 +259,11 @@ the repodata `updateinfo.xml` (the per-CVE ALAS pages are JS-rendered and
 don't fetch headlessly). **ALAS2023-2026-2057** and **ALAS2023-2026-2058**
 (both 2026-08-17, Important) fixed the `kernel6.12` stream at
 `6.12.100-125.179` and the default `kernel` stream at `6.1.180-225.360`
-respectively — both Amazon-specific cherry-picks, since each build sits
-below its line's upstream first-fixed release (6.12.101 and 6.1.183). The
-`kernel6.18` opt-in (still below the 6.18.42 first fix) carries no ALAS
-for this CVE yet; it should flip on a routine rebase to a fixed point
-release.
+respectively, and **ALAS2023-2026-2071** (2026-08-31, Important) fixed the
+`kernel6.18` stream at `6.18.41-94.142` — all three Amazon-specific
+cherry-picks, since each build sits below its line's upstream first-fixed
+release (6.12.101, 6.1.183, and 6.18.42). All three currently supported
+AL2023 kernel streams are now fixed.
 
 **AL2** (amzn2) is not tracked here: it reached end of support on
 **2026-06-30** — before this tracker existed — with no ALAS for this CVE.
@@ -404,12 +404,13 @@ until patched.
   6.18.42, 6.12.101, 6.6.148, 6.1.183 (2026-08-19), and 5.15.218
   (2026-08-27), but the 5.10.y LTS line carries no fix yet. Debian's
   bookworm default and bullseye's opt-in `linux-6.1` now have an upstream
-  6.1.y fix to adopt but have not yet done so. Amazon's 6.18 opt-in
-  stream and Debian's bullseye default sit on lines with no upstream fix
-  at all. Amazon has cherry-picked the fix independently, below the
-  upstream threshold, into both its default `kernel` stream
-  (ALAS2023-2026-2058) and its 6.12 opt-in stream (ALAS2023-2026-2057).
-  Check the distribution row for your kernel.
+  6.1.y fix to adopt but have not yet done so; bullseye's default (5.10.y)
+  sits on a line with no upstream fix at all. Amazon has cherry-picked the
+  fix independently, below the upstream threshold, into all three
+  currently supported AL2023 kernel streams: the default `kernel`
+  (ALAS2023-2026-2058), the `kernel6.12` opt-in (ALAS2023-2026-2057), and
+  the `kernel6.18` opt-in (ALAS2023-2026-2071). Check the distribution row
+  for your kernel.
 
 ## Verification log
 
@@ -548,8 +549,10 @@ readers never need it.
     **ALAS2023-2026-2057** (2026-08-17, Important) — fixed; the build sits
     below the upstream 6.12.101 threshold, confirming an Amazon-specific
     backport rather than a rebase.
-  - `kernel6.18` (below the 6.18.42 first fix) carries no ALAS for this
-    CVE — vulnerable.
+  - `kernel6.18` `6.18.41-94.142` cherry-picks the fix per
+    **ALAS2023-2026-2071** (2026-08-31, Important) — fixed; the build sits
+    below the upstream 6.18.42 threshold, confirming an Amazon-specific
+    backport rather than a rebase.
   - The streams' *Current kernel* values are read from `primary.xml.gz`.
   - AL2 (amzn2) reached end of support 2026-06-30 with no ALAS for this
     CVE; its 5.10 / 5.15 extras kernels are permanently vulnerable, the
