@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-08-31
+lastmod: 2026-09-01
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -135,9 +135,9 @@ row is vulnerable).
 | Rocky Linux | 10 | 6.12.0-211.49.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.42.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.158.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
-| Amazon Linux | 2023 (default) | 6.1.180-225.360 | — | — | :x: Vulnerable — no ALAS yet |
-| Amazon Linux | 2023 (6.12 opt-in) | 6.12.100-125.179 | 6.12.100-125.179 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2057 |
-| Amazon Linux | 2023 (6.18 opt-in) | 6.18.41-94.142 | — | — | :x: Vulnerable — no ALAS yet |
+| Amazon Linux | 2023 (default) | 6.1.182-227.379 | 6.1.180-225.360 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2058 |
+| Amazon Linux | 2023 (6.12 opt-in) | 6.12.103-127.188 | 6.12.100-125.179 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2057 |
+| Amazon Linux | 2023 (6.18 opt-in) | 6.18.44-99.149 | — | — | :x: Vulnerable — no ALAS yet |
 {.distros}
 
 ### Linux kernel
@@ -256,13 +256,14 @@ track the RHEL fixes once they ship.
 
 Each **AL2023** kernel stream is its own row above; status is verified from
 the repodata `updateinfo.xml` (the per-CVE ALAS pages are JS-rendered and
-don't fetch headlessly). **ALAS2023-2026-2057** (2026-08-17, Important)
-fixed the `kernel6.12` stream at `6.12.100-125.179` — an Amazon-specific
-cherry-pick, since that build sits below the upstream 6.12.101 threshold.
-The default `kernel` (the 6.1 line, whose upstream 6.1.183 fix Amazon
-has not yet picked up) and the `kernel6.18` opt-in (still below the
-6.18.42 first fix) carry no ALAS for this CVE yet; `kernel6.18` should
-flip on a routine rebase to a fixed point release.
+don't fetch headlessly). **ALAS2023-2026-2057** and **ALAS2023-2026-2058**
+(both 2026-08-17, Important) fixed the `kernel6.12` stream at
+`6.12.100-125.179` and the default `kernel` stream at `6.1.180-225.360`
+respectively — both Amazon-specific cherry-picks, since each build sits
+below its line's upstream first-fixed release (6.12.101 and 6.1.183). The
+`kernel6.18` opt-in (still below the 6.18.42 first fix) carries no ALAS
+for this CVE yet; it should flip on a routine rebase to a fixed point
+release.
 
 **AL2** (amzn2) is not tracked here: it reached end of support on
 **2026-06-30** — before this tracker existed — with no ALAS for this CVE.
@@ -403,12 +404,12 @@ until patched.
   6.18.42, 6.12.101, 6.6.148, 6.1.183 (2026-08-19), and 5.15.218
   (2026-08-27), but the 5.10.y LTS line carries no fix yet. Debian's
   bookworm default and bullseye's opt-in `linux-6.1` now have an upstream
-  6.1.y fix to adopt but have not yet done so; Amazon AL2023's default
-  kernel stream is in the same position. Amazon's 6.18 opt-in stream and
-  Debian's bullseye default sit on lines with no upstream fix at all.
-  Amazon has cherry-picked the fix into its 6.12 opt-in stream
-  independently (ALAS2023-2026-2057). Check the distribution row for
-  your kernel.
+  6.1.y fix to adopt but have not yet done so. Amazon's 6.18 opt-in
+  stream and Debian's bullseye default sit on lines with no upstream fix
+  at all. Amazon has cherry-picked the fix independently, below the
+  upstream threshold, into both its default `kernel` stream
+  (ALAS2023-2026-2058) and its 6.12 opt-in stream (ALAS2023-2026-2057).
+  Check the distribution row for your kernel.
 
 ## Verification log
 
@@ -539,13 +540,16 @@ readers never need it.
     `kernel-4.18.0-553.150.1.lve`+ in the testing repos; CL 8 LTS / 9 LTS
     / 10 and the CL Ubuntu 22.04 kernel are in preparation.
 - **Amazon Linux** (via repodata `updateinfo.xml.gz` / `primary.xml.gz`):
+  - default `kernel` `6.1.180-225.360` cherry-picks the fix per
+    **ALAS2023-2026-2058** (2026-08-17, Important) — fixed; the build sits
+    below the upstream 6.1.183 threshold, confirming an Amazon-specific
+    backport rather than a rebase.
   - `kernel6.12` `6.12.100-125.179` cherry-picks the fix per
     **ALAS2023-2026-2057** (2026-08-17, Important) — fixed; the build sits
     below the upstream 6.12.101 threshold, confirming an Amazon-specific
     backport rather than a rebase.
-  - AL2023 `kernel` (6.1.y — Amazon has not picked up the 6.1.183
-    upstream fix) and `kernel6.18` (below the 6.18.42 first fix) carry
-    no ALAS for this CVE — vulnerable.
+  - `kernel6.18` (below the 6.18.42 first fix) carries no ALAS for this
+    CVE — vulnerable.
   - The streams' *Current kernel* values are read from `primary.xml.gz`.
   - AL2 (amzn2) reached end of support 2026-06-30 with no ALAS for this
     CVE; its 5.10 / 5.15 extras kernels are permanently vulnerable, the
