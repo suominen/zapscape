@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-01
+lastmod: 2026-09-02
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -121,8 +121,8 @@ row is vulnerable).
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
 | Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable |
 | Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed |
-| Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable |
-| Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable |
+| Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
+| Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
 | Proxmox VE | 9 (default) | 7.0.14-14-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
@@ -163,16 +163,26 @@ Debian's `linux` is affected in every suite (the bug predates all of them);
 the security tracker's CVE-2026-64561 record drove these assessments.
 **trixie** (stable) shipped the fix as **6.12.101-1** via `trixie-security`
 under **DSA-6415-1** (2026-08-06), and **sid**/**forky** carry 7.1.6-1 or
-newer. **bookworm**'s default kernel and bullseye's opt-in `linux-6.1`
-package both ride 6.1.y, which gained an upstream fix (6.1.183, 2026-08-19)
-after the security tracker's last check — Debian has not yet backported it,
-so both remain `:x:` pending that pickup. **bullseye**'s default (5.10.y)
-has no upstream fix to adopt at all and remains stranded. bookworm does
-have a way off its line already today: Debian published a new opt-in
+newer. **bookworm**'s default kernel rides 6.1.y, which gained an upstream
+fix (6.1.183, 2026-08-19) after the security tracker's last check — Debian
+has not yet backported it, so it remains `:x:` pending that pickup. bookworm
+does have a way off its line already today: Debian published a new opt-in
 **`linux-6.12`** source package straight to `bookworm-security` at
 **6.12.101-1~deb12u1** (2026-08-15), already carrying the fix — a bookworm
 host can install it to get off the vulnerable default without waiting on a
-6.1.y backport. Debian keeps `/dev/kvm` owned `root:kvm` mode `0660`, so the
+6.1.y backport.
+
+**bullseye**'s Debian LTS window closed on **2026-08-31** — both its 5.10.y
+default and its opt-in `linux-6.1` package have dropped out of the Debian
+security tracker's coverage and out of the archive's actively-tracked suite
+set entirely. Neither will receive another Debian security update: the
+5.10.y default already had no upstream fix to adopt, and the 6.1.y opt-in
+package's line only gained one upstream (6.1.183) after this window had
+already closed. Both rows are now permanently `:x:` under standard Debian
+support; the way off is upgrading to a supported release, or, for paying
+customers, Freexian's commercial Extended LTS, which covers Debian 11
+through 2031 on a per-package subscription basis this tracker cannot
+verify. Debian keeps `/dev/kvm` owned `root:kvm` mode `0660`, so the
 unprivileged *local* vector needs `kvm`-group membership there; the
 guest-escape vector is unaffected by that.
 
@@ -477,10 +487,15 @@ readers never need it.
     published straight to `bookworm-security` at `6.12.101-1~deb12u1`
     (madison lists it as `new`; snapshot.debian.org `first_seen`
     2026-08-15), already carrying the fix — fixed.
-  - LTS/bullseye default — on the 5.10.y line (`bullseye-security`); no
-    5.10.y backport — vulnerable.
-  - LTS/bullseye opt-in `linux-6.1` — rebuilds the 6.1 line below the
-    6.1.183 fix, no tracker entry for this CVE — vulnerable.
+  - LTS/bullseye default and opt-in `linux-6.1` — both packages have
+    dropped out of the security tracker's `releases` map and out of
+    unfiltered `madison` entirely; confirmed via the Debian LTS wiki
+    schedule (bullseye's LTS ran 2024-08-15 – 2026-08-31, now closed).
+    The `bullseye-security` suite still serves the same builds recorded
+    here (checked directly against its `Packages.gz`, not madison), but
+    is frozen — no 5.10.y backport exists to adopt, and the 6.1.y opt-in
+    package's line gained an upstream fix only after this window closed
+    — both vulnerable, permanently, under standard Debian support.
   - The rows' *Current kernel* values come from `madison` and the
     tracker's `<suite>-security` `repositories` entries.
 - **Proxmox VE** (fixed kernels confirmed in `~/src/proxmox/pve-kernel`
