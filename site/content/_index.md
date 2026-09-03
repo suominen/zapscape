@@ -116,8 +116,8 @@ row is vulnerable).
 | Linux kernel | 6.1.x | 6.1.187 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 5.15.x | 5.15.220 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 5.10.x | 5.10.269 | — | — | :x: Vulnerable |
-| Debian | sid (unstable) | 7.1.12-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
-| Debian | forky (testing) | 7.1.8-2 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
+| Debian | sid (unstable) | 7.1.13-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
+| Debian | forky (testing) | 7.1.12-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
 | Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable |
 | Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed |
