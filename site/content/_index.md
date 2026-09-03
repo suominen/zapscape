@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-02
+lastmod: 2026-09-03
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -108,14 +108,14 @@ row is vulnerable).
 
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
-| Linux kernel | mainline | 7.2.2 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
-| Linux kernel | 7.1.x | 7.1.12 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed |
-| Linux kernel | 6.18.x | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.12.x | 6.12.107 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.6.x | 6.6.155 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.1.x | 6.1.186 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.15.x | 5.15.219 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.10.x | 5.10.268 | — | — | :x: Vulnerable |
+| Linux kernel | mainline | 7.2.3 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
+| Linux kernel | 7.1.x | 7.1.13 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed — EOL |
+| Linux kernel | 6.18.x | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.12.x | 6.12.108 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.6.x | 6.6.156 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.1.x | 6.1.187 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.15.x | 5.15.220 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.10.x | 5.10.269 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.12-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.8-2 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
@@ -123,15 +123,15 @@ row is vulnerable).
 | Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed |
 | Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
-| Proxmox VE | 9 (default) | 7.0.14-14-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
+| Proxmox VE | 9 (default) | 7.0.14-15-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | master | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | master | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.48 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
-| NixOS | Unstable (small) | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.48 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.48 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | 26.05 (small) | 6.18.48 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | 26.05 (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.50.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.42.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.158.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
@@ -147,7 +147,9 @@ backported it to the 7.1, 6.18, 6.12, and 6.6 lines on 2026-08-03 (7.1.6,
 6.18.42, 6.12.101, and 6.6.148), then to **6.1.y** on 2026-08-19 (6.1.183),
 and to **5.15.y** on 2026-08-27 (5.15.218). The **7.0.y** line reached end
 of life at 7.0.14 on 2026-06-27 without the backport; a host still on it
-is in-window and permanently vulnerable. The **5.10.y** LTS line is still
+is in-window and permanently vulnerable. The **7.1.y** line has since
+reached end of life too, at 7.1.13 (2026-09-02) — already fixed, so a
+host frozen there stays patched. The **5.10.y** LTS line is still
 maintained but carries no fix yet: it predates `is_page_fault_stale()` and
 carries the stale-root check in an older shape, so a fix there needs
 adaptation, unlike 6.1.y and 5.15.y where the backport landed.
@@ -456,7 +458,8 @@ readers never need it.
   `v5.15.218` (tag date 2026-08-27). `linux-5.10.y` returns no match;
   `is_page_fault_stale` is absent from its MMU sources, so a fix there
   still needs adaptation. 7.0.y is EOL at 7.0.14 (2026-06-27) without the
-  fix.
+  fix; 7.1.y is now EOL too, at 7.1.13 (tag date 2026-09-02), already
+  fixed.
 
 #### Scoring
 
