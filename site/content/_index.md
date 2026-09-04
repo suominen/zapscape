@@ -134,7 +134,7 @@ row is vulnerable).
 | NixOS | 26.05 (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.50.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.42.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
-| Rocky Linux | 8 | 4.18.0-553.158.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
+| Rocky Linux | 8 | 4.18.0-553.159.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
 | Amazon Linux | 2023 (default) | 6.1.182-227.379 | 6.1.180-225.360 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2058 |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.103-127.188 | 6.12.100-125.179 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2057 |
 | Amazon Linux | 2023 (6.18 opt-in) | 6.18.44-99.149 | 6.18.41-94.142 | 2026-08-31 | :white_check_mark: Fixed — ALAS2023-2026-2071 |
