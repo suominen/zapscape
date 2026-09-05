@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-04
+lastmod: 2026-09-05
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -25,7 +25,7 @@ cover:
 | Discoverer | Hyunwoo Kim ([`@v4bel`][poc]) |
 | Public disclosure | 2026-08-06 (researcher writeup / PoC; CVE record published 2026-08-04) |
 | Public PoC | [V4bel/Zapscape][poc] (reported to crash the guest rather than escape on CloudLinux-built kernels) |
-| KEV / EPSS / CVSS | CVSS 7.0 Moderate (Red Hat, CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H); kernel CNA's own score, carried in NVD's record (`vulnStatus: Received`, not yet NVD-analyzed), is CVSS:3.1 8.8 High (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H); EPSS 0.12 % (2nd pct); not in KEV |
+| KEV / EPSS / CVSS | CVSS 7.0 Moderate (Red Hat, CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H); kernel CNA's own score, carried in NVD's record (`vulnStatus: Received`, not yet NVD-analyzed), is CVSS:3.1 8.8 High (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H); EPSS 0.35 % (28th pct); not in KEV |
 | Related | [Januscape (CVE-2026-53359)][januscape] and [ITScape (CVE-2026-46316)][itscape] — the July 2026 KVM escapes by the same researcher (x86 shadow-MMU role confusion; arm64 vGIC-ITS). All three are `-scape` KVM escapes; Zapscape and Januscape both live in the x86 shadow MMU but are distinct bugs |
 {.summary}
 
@@ -127,9 +127,9 @@ row is vulnerable).
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable | 6.18.48 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
+| NixOS | Unstable | 6.18.49 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable (nixpkgs) | 6.18.48 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
+| NixOS | Unstable (nixpkgs) | 6.18.49 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.49 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.50.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
