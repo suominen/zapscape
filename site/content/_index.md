@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-06
+lastmod: 2026-09-07
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -471,8 +471,8 @@ readers never need it.
   (AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H) — via
   `services.nvd.nist.gov/rest/json/cves/2.0`, `sourceIdentifier` matching
   the kernel CNA and `vulnStatus: Received` (not yet NVD-analyzed), so this
-  is the submitter's score, not an independent NVD rating. EPSS 0.12 %
-  (2nd percentile, via api.first.org). Not in CISA KEV.
+  is the submitter's score, not an independent NVD rating. EPSS 0.35 %
+  (28th percentile, via api.first.org). Not in CISA KEV.
 
 #### Distributions
 
