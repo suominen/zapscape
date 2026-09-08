@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-07
+lastmod: 2026-09-08
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -108,10 +108,10 @@ row is vulnerable).
 
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
-| Linux kernel | mainline | 7.2.3 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
+| Linux kernel | mainline | 7.2.4 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
 | Linux kernel | 7.1.x | 7.1.13 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed — EOL |
-| Linux kernel | 6.18.x | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.12.x | 6.12.108 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.18.x | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.12.x | 6.12.109 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 6.6.x | 6.6.156 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 6.1.x | 6.1.187 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 5.15.x | 5.15.220 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
@@ -125,10 +125,10 @@ row is vulnerable).
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
 | Proxmox VE | 9 (default) | 7.0.14-15-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | master | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | release-26.05 | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | master | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | release-26.05 | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.49 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
-| NixOS | Unstable (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable (small) | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.49 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.49 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | 26.05 (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
