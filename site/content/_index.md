@@ -119,8 +119,8 @@ row is vulnerable).
 | Debian | sid (unstable) | 7.1.13-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.12-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
-| Debian | 12 (bookworm) | 6.1.180-1 | — | — | :x: Vulnerable |
-| Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed |
+| Debian | 12 (bookworm) | 6.1.187-1 | — | — | :x: Vulnerable |
+| Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed — DLA-4745-1 |
 | Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
 | Proxmox VE | 9 (default) | 7.0.14-15-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
@@ -489,7 +489,8 @@ readers never need it.
   - oldstable/bookworm opt-in `linux-6.12` — new source package, first
     published straight to `bookworm-security` at `6.12.101-1~deb12u1`
     (madison lists it as `new`; snapshot.debian.org `first_seen`
-    2026-08-15), already carrying the fix — fixed.
+    2026-08-15), already carrying the fix, now confirmed under
+    **DLA-4745-1** — fixed.
   - LTS/bullseye default and opt-in `linux-6.1` — both packages have
     dropped out of the security tracker's `releases` map and out of
     unfiltered `madison` entirely; confirmed via the Debian LTS wiki
