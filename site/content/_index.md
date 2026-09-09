@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-08
+lastmod: 2026-09-09
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -119,19 +119,19 @@ row is vulnerable).
 | Debian | sid (unstable) | 7.1.13-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.12-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
-| Debian | 12 (bookworm) | 6.1.187-1 | — | — | :x: Vulnerable |
+| Debian | 12 (bookworm) | 6.1.187-1 | 6.1.187-1 | 2026-09-08 | :white_check_mark: Fixed |
 | Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed — DLA-4745-1 |
 | Debian | 11 (bullseye, LTS) | 5.10.262-1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
 | Debian | 11 (6.1 opt-in) | 6.1.180-1~deb11u1 | — | — | :x: Vulnerable — LTS ended 2026-08-31 |
-| Proxmox VE | 9 (default) | 7.0.14-15-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
+| Proxmox VE | 9 (default) | 7.0.14-16-pve | 7.0.14-9-pve | 2026-08-05 | :white_check_mark: Fixed |
 | Proxmox VE | 8 (default) | 6.8.12-43-pve | 6.8.12-40-pve | 2026-08-05 | :white_check_mark: Fixed |
 | NixOS | master | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable | 6.18.49 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
+| NixOS | Unstable | 6.18.50 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
 | NixOS | Unstable (small) | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
-| NixOS | Unstable (nixpkgs) | 6.18.49 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
+| NixOS | Unstable (nixpkgs) | 6.18.50 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
 | NixOS | 26.05 | 6.18.49 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | 26.05 (small) | 6.18.49 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | 26.05 (small) | 6.18.50 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.51.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.44.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.159.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
@@ -165,14 +165,13 @@ Debian's `linux` is affected in every suite (the bug predates all of them);
 the security tracker's CVE-2026-64561 record drove these assessments.
 **trixie** (stable) shipped the fix as **6.12.101-1** via `trixie-security`
 under **DSA-6415-1** (2026-08-06), and **sid**/**forky** carry 7.1.6-1 or
-newer. **bookworm**'s default kernel rides 6.1.y, which gained an upstream
-fix (6.1.183, 2026-08-19) after the security tracker's last check — Debian
-has not yet backported it, so it remains `:x:` pending that pickup. bookworm
-does have a way off its line already today: Debian published a new opt-in
-**`linux-6.12`** source package straight to `bookworm-security` at
-**6.12.101-1~deb12u1** (2026-08-15), already carrying the fix — a bookworm
-host can install it to get off the vulnerable default without waiting on a
-6.1.y backport.
+newer. **bookworm**'s default kernel rides 6.1.y: Debian backported the
+upstream 6.1.183 fix into **6.1.187-1** via `bookworm-security` (first seen
+2026-09-08), so the default is fixed too — no DSA has been issued for it.
+bookworm also carries a separate opt-in **`linux-6.12`** source
+package, published straight to `bookworm-security` at **6.12.101-1~deb12u1**
+(2026-08-15) under **DLA-4745-1**, which reached the fix even earlier than
+the default line.
 
 **bullseye**'s Debian LTS window closed on **2026-08-31** — both its 5.10.y
 default and its opt-in `linux-6.1` package have dropped out of the Debian
@@ -414,10 +413,11 @@ until patched.
   host that runs untrusted guests.
 - **Backports are narrow (CVE-2026-64561):** the fix has landed in 7.1.6,
   6.18.42, 6.12.101, 6.6.148, 6.1.183 (2026-08-19), and 5.15.218
-  (2026-08-27), but the 5.10.y LTS line carries no fix yet. Debian's
-  bookworm default and bullseye's opt-in `linux-6.1` now have an upstream
-  6.1.y fix to adopt but have not yet done so; bullseye's default (5.10.y)
-  sits on a line with no upstream fix at all. Amazon has cherry-picked the
+  (2026-08-27), but the 5.10.y LTS line carries no fix yet. Debian has
+  backported it into bookworm's 6.1.y default (6.1.187-1); bullseye's LTS
+  window closed on 2026-08-31 with neither its 5.10.y default nor its
+  opt-in `linux-6.1` package ever picking up a fix, so both are
+  permanently vulnerable under standard support. Amazon has cherry-picked the
   fix independently, below the upstream threshold, into all three
   currently supported AL2023 kernel streams: the default `kernel`
   (ALAS2023-2026-2058), the `kernel6.12` opt-in (ALAS2023-2026-2057), and
@@ -483,9 +483,9 @@ readers never need it.
     the `7.1.6-1` first fix — fixed.
   - stable/trixie — first fixed `6.12.101-1` via `trixie-security`
     (**DSA-6415-1**, 2026-08-06, lists CVE-2026-64561) — fixed.
-  - oldstable/bookworm default — on the 6.1.y line
-    (`bookworm-security`); Debian has not adopted the 6.1.183 upstream
-    fix, tracker marks vulnerable — vulnerable.
+  - oldstable/bookworm default — the tracker marks it `resolved`,
+    `fixed_version` `6.1.187-1` via `bookworm-security` (snapshot.debian.org
+    `first_seen` 2026-09-08) — fixed.
   - oldstable/bookworm opt-in `linux-6.12` — new source package, first
     published straight to `bookworm-security` at `6.12.101-1~deb12u1`
     (madison lists it as `new`; snapshot.debian.org `first_seen`
