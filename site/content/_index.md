@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-10
+lastmod: 2026-09-11
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -117,7 +117,7 @@ row is vulnerable).
 | Linux kernel | 5.15.x | 5.15.220 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
 | Linux kernel | 5.10.x | 5.10.269 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.13-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
-| Debian | forky (testing) | 7.1.12-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
+| Debian | forky (testing) | 7.1.13-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
 | Debian | 12 (bookworm) | 6.1.187-1 | 6.1.187-1 | 2026-09-08 | :white_check_mark: Fixed |
 | Debian | 12 (6.12 opt-in) | 6.12.101-1~deb12u1 | 6.12.101-1~deb12u1 | 2026-08-15 | :white_check_mark: Fixed — DLA-4745-1 |
@@ -479,7 +479,7 @@ readers never need it.
 - **Debian** (via the Debian security tracker + `madison`):
   - unstable/sid — the tracker records the fix from `7.1.6-1` (entered
     unstable 2026-08-03) — fixed.
-  - testing/forky — `madison` shows the suite on the 7.1 kernel, past
+  - testing/forky — `madison` shows the suite on `7.1.13-1`, past
     the `7.1.6-1` first fix — fixed.
   - stable/trixie — first fixed `6.12.101-1` via `trixie-security`
     (**DSA-6415-1**, 2026-08-06, lists CVE-2026-64561) — fixed.
