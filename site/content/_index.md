@@ -10,6 +10,15 @@ cover:
   hiddenInSingle: true
 ---
 
+*This tracker is no longer updated.  Every tracked distribution has
+shipped a kernel carrying the `2abd5287f083` backport for each release it
+still supports.  The rows left vulnerable will not flip: the upstream
+5.10.y LTS line had no backport when tracking ended, and Debian 11
+(bullseye) left Debian LTS on 2026-08-31 without one.  The in-window
+lines that ended without the fix (upstream 7.0.y and the superseded
+Proxmox series) likewise remain permanently vulnerable, as noted in the
+sections below.*
+
 ## Summary
 
 | Field | Detail |
@@ -96,9 +105,9 @@ the bug, not whether the kernel is fixed.
 
 Unusually for this family, the fix reached the **6.6, 6.12, 6.18, and 7.1**
 stable lines first (all on 2026-08-03); **6.1** picked it up on 2026-08-19,
-and **5.15** on 2026-08-27. The **5.10** LTS line carries no fix yet, so the
-distributions still riding it are vulnerable with nothing upstream to
-adopt. The first group
+and **5.15** on 2026-08-27. The **5.10** LTS line had no fix when this
+tracker was archived (2026-09-15), so the distributions still riding it
+are vulnerable with nothing upstream to adopt. The first group
 tracks the upstream kernel itself; the rest are a focused set of x86-64
 distributions (other systems named in the disclosures appear only in
 prose). *Current kernel* is the latest version observed in the row's
@@ -149,10 +158,11 @@ and to **5.15.y** on 2026-08-27 (5.15.218). The **7.0.y** line reached end
 of life at 7.0.14 on 2026-06-27 without the backport; a host still on it
 is in-window and permanently vulnerable. The **7.1.y** line has since
 reached end of life too, at 7.1.13 (2026-09-02) — already fixed, so a
-host frozen there stays patched. The **5.10.y** LTS line is still
-maintained but carries no fix yet: it predates `is_page_fault_stale()` and
-carries the stale-root check in an older shape, so a fix there needs
-adaptation, unlike 6.1.y and 5.15.y where the backport landed.
+host frozen there stays patched. The **5.10.y** LTS line was still
+maintained but had no fix when this tracker was archived (2026-09-15): it
+predates `is_page_fault_stale()` and carries the stale-root check in an
+older shape, so a fix there needs adaptation, unlike 6.1.y and 5.15.y
+where the backport landed.
 
 When verifying a tree directly, the reordered calls are in
 `direct_page_fault()` in `arch/x86/kvm/mmu/mmu.c` and `FNAME(page_fault)`
@@ -260,8 +270,8 @@ of Red Hat: per its advisory, **CloudLinux 9** already ships a fixed
 have `kernel-4.18.0-553.150.1.lve` (or newer) rolling out through the
 testing repositories, and **CloudLinux 8 LTS / 9 LTS / 10** are in
 preparation. The CloudLinux Ubuntu 22.04 kernel is delivered via Canonical,
-with a KernelCare livepatch in preparation. Oracle Linux is expected to
-track the RHEL fixes once they ship.
+with a KernelCare livepatch in preparation. Oracle Linux (not tracked
+here) follows the RHEL fixes through its RHEL-compatible kernel.
 
 ### Amazon Linux
 
@@ -281,7 +291,7 @@ AL2023 kernel streams are now fixed.
 Its 5.10 and 5.15 `amazon-linux-extras` kernels are in-window and
 permanently vulnerable (the 4.14 default predates the v5.9 introduction and
 is not affected). The exit for an AL2 KVM host is migrating to AL2023 (or
-another distribution) and adopting its fix once one ships.
+another distribution) and adopting its fixed kernel.
 
 ## Detection
 
@@ -413,7 +423,8 @@ until patched.
   host that runs untrusted guests.
 - **Backports are narrow (CVE-2026-64561):** the fix has landed in 7.1.6,
   6.18.42, 6.12.101, 6.6.148, 6.1.183 (2026-08-19), and 5.15.218
-  (2026-08-27), but the 5.10.y LTS line carries no fix yet. Debian has
+  (2026-08-27), but the 5.10.y LTS line had none when this tracker was
+  archived (2026-09-15). Debian has
   backported it into bookworm's 6.1.y default (6.1.187-1); bullseye's LTS
   window closed on 2026-08-31 with neither its 5.10.y default nor its
   opt-in `linux-6.1` package ever picking up a fix, so both are
@@ -455,11 +466,11 @@ readers never need it.
   `linux-6.6.y` (`35e77467610c`), all tagged 2026-08-03; in
   `linux-6.1.y` (`65c4f7a1028c`), first in tag `v6.1.183` (tag date
   2026-08-19); and in `linux-5.15.y` (`62ef67af1878`), first in tag
-  `v5.15.218` (tag date 2026-08-27). `linux-5.10.y` returns no match;
-  `is_page_fault_stale` is absent from its MMU sources, so a fix there
-  still needs adaptation. 7.0.y is EOL at 7.0.14 (2026-06-27) without the
-  fix; 7.1.y is now EOL too, at 7.1.13 (tag date 2026-09-02), already
-  fixed.
+  `v5.15.218` (tag date 2026-08-27). `linux-5.10.y` returned no match at
+  archival (2026-09-15); `is_page_fault_stale` is absent from its MMU
+  sources, so a fix there needs adaptation. 7.0.y is EOL at 7.0.14
+  (2026-06-27) without the fix; 7.1.y is now EOL too, at 7.1.13 (tag date
+  2026-09-02), already fixed.
 
 #### Scoring
 

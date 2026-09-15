@@ -36,18 +36,23 @@ The rendered site is published at <https://kimmo.cloud/zapscape/>.
 
 ## Your task
 
-This is a **live** tracker (seeded 2026-08-07): keep the per-distribution
-patch status in `site/content/_index.md` current as fixes ship, following
-the routine-run scope below.  The fix is very fresh — the 6.6 / 6.12 /
-6.18 / 7.1 stable lines and both Proxmox default kernels carry it, but the
-6.1.y / 5.15.y / 5.10.y LTS lines, the RHEL family (no RHSA yet), and
-Amazon (no ALAS yet) do not — so several rows are `:x:` and expected to
-flip.  Watch the Red Hat security data API and the distro repodata for
-adoption, and edit only the lines whose facts change.
+This tracker was archived on 2026-09-15 — it is no longer updated.
+Every tracked distribution has shipped a kernel carrying the
+`2abd5287f083` backport for each release it still supports; the rows
+left `:x:` cannot flip (the upstream 5.10.y LTS line had no backport
+when tracking ended, and Debian 11 left Debian LTS on 2026-08-31 without
+one), and the in-window lines that ended without the fix (upstream
+7.0.y, the superseded Proxmox series) are covered in the prose as
+permanently vulnerable.  The auto-update (timer, unit symlinks,
+worktree, `auto-update` branch) has been torn down; do not resume
+routine updates.  If a genuinely new fact surfaces (e.g. a KEV listing
+or a 5.10.y backport), edit `site/content/_index.md`, rebuild with
+`make build`, and publish with `make dist` — but the default state is
+frozen.
 
-To retire (archive) this tracker — when every tracked distribution has
-shipped a fix, or the bug is otherwise no longer worth active tracking —
-follow `~/src/cve-tracker-template/LIFECYCLE.md` § "Retiring a tracker".
+The retirement followed `~/src/cve-tracker-template/LIFECYCLE.md`
+§ "Retiring a tracker" — the playbook for retiring (archiving) any of
+these trackers.
 
 ## Repo layout
 
