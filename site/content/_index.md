@@ -3,7 +3,7 @@ title: "Zapscape — KVM guest-to-host escape"
 description: "Linux kernel KVM/x86 shadow-MMU root-invalidation flaw (CVE-2026-64561, Zapscape) — guest-to-host escape / local root — distro patch status tracker"
 layout: "single"
 date: 2026-08-07
-lastmod: 2026-09-14
+lastmod: 2026-09-15
 cover:
   image: "zapscape-tracker.png"
   alt: "Zapscape — Linux KVM/x86 shadow-MMU guest-to-host escape tracker"
@@ -108,14 +108,14 @@ row is vulnerable).
 
 | Distribution | Release | Current kernel | First fixed | Fixed since | Status |
 |---|---|---|---|---|---|
-| Linux kernel | mainline | 7.2.5 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
+| Linux kernel | mainline | 7.2.6 | 7.2-rc5 | 2026-07-26 | :white_check_mark: Fixed — carries `2abd5287f083` |
 | Linux kernel | 7.1.x | 7.1.13 | 7.1.6 | 2026-08-03 | :white_check_mark: Fixed — EOL |
-| Linux kernel | 6.18.x | 6.18.51 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.12.x | 6.12.109 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.6.x | 6.6.156 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 6.1.x | 6.1.187 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.15.x | 5.15.220 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
-| Linux kernel | 5.10.x | 5.10.269 | — | — | :x: Vulnerable |
+| Linux kernel | 6.18.x | 6.18.52 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.12.x | 6.12.110 | 6.12.101 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.6.x | 6.6.157 | 6.6.148 | 2026-08-03 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 6.1.x | 6.1.188 | 6.1.183 | 2026-08-19 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.15.x | 5.15.221 | 5.15.218 | 2026-08-27 | :white_check_mark: Fixed — LTS |
+| Linux kernel | 5.10.x | 5.10.270 | — | — | :x: Vulnerable |
 | Debian | sid (unstable) | 7.1.13-1 | 7.1.6-1 | 2026-08-03 | :white_check_mark: Fixed |
 | Debian | forky (testing) | 7.1.13-1 | 7.1.6-1 | 2026-08-07 | :white_check_mark: Fixed |
 | Debian | 13 (trixie) | 6.12.107-1 | 6.12.101-1 | 2026-08-06 | :white_check_mark: Fixed — DSA-6415-1 |
@@ -128,16 +128,16 @@ row is vulnerable).
 | NixOS | master | 6.18.52 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | release-26.05 | 6.18.52 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable | 6.18.51 | 6.18.42 | 2026-08-04 | :white_check_mark: Fixed |
-| NixOS | Unstable (small) | 6.18.51 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | Unstable (small) | 6.18.52 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | NixOS | Unstable (nixpkgs) | 6.18.51 | 6.18.42 | 2026-08-08 | :white_check_mark: Fixed |
-| NixOS | 26.05 | 6.18.50 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
-| NixOS | 26.05 (small) | 6.18.51 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
+| NixOS | 26.05 | 6.18.51 | 6.18.42 | 2026-08-05 | :white_check_mark: Fixed |
+| NixOS | 26.05 (small) | 6.18.52 | 6.18.42 | 2026-08-03 | :white_check_mark: Fixed |
 | Rocky Linux | 10 | 6.12.0-211.54.1.el10_2 | 6.12.0-211.39.1.el10_2 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45114 |
 | Rocky Linux | 9 | 5.14.0-687.46.1.el9_8 | 5.14.0-687.30.1.el9_8 | 2026-07-27 | :white_check_mark: Fixed — RHSA-2026:45192 |
 | Rocky Linux | 8 | 4.18.0-553.162.1.el8_10 | 4.18.0-553.147.1.el8_10 | 2026-07-26 | :white_check_mark: Fixed — RHSA-2026:45115 |
-| Amazon Linux | 2023 (default) | 6.1.182-227.379 | 6.1.180-225.360 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2058 |
+| Amazon Linux | 2023 (default) | 6.1.186-228.374 | 6.1.180-225.360 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2058 |
 | Amazon Linux | 2023 (6.12 opt-in) | 6.12.103-127.188 | 6.12.100-125.179 | 2026-08-17 | :white_check_mark: Fixed — ALAS2023-2026-2057 |
-| Amazon Linux | 2023 (6.18 opt-in) | 6.18.44-99.149 | 6.18.41-94.142 | 2026-08-31 | :white_check_mark: Fixed — ALAS2023-2026-2071 |
+| Amazon Linux | 2023 (6.18 opt-in) | 6.18.48-107.148 | 6.18.41-94.142 | 2026-08-31 | :white_check_mark: Fixed — ALAS2023-2026-2071 |
 {.distros}
 
 ### Linux kernel
